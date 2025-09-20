@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestMove : MonoBehaviour
+public class playerMovement : MonoBehaviour
 {
     //Outlets
     Rigidbody2D _rb;
 
     //Config
+    public bool grounded;
     public float horizontal = 2;
     public float jump = 2;
 
@@ -22,32 +23,24 @@ public class TestMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        grounded = Physics2D.CircleCast(transform.position, 0.14f, Vector2.down, 0.05f);
         float y = Input.GetAxis("Vertical");
-        float x = Input.GetAxis("Horizontral");
+        float x = Input.GetAxis("Horizontal");
         
         Vector2 direction = new Vector2(x, y);
+        Run(direction);
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && grounded)
         {
             Jump(Vector2.up);
         }
-        // if (Input.GetKey(KeyCode.LeftArrow))
-        //     {
-        //         transform.position += new Vector3(-0.2f, 0, 0);
-        //     }
-        // if (Input.GetKey(KeyCode.RightArrow))
-        // {
-        //     transform.position += new Vector3(0.2f, 0, 0);
-        // }
-        // if (Input.GetKey(KeyCode.Space))
-        // {
-        //     _rb.AddForce(Vector2.up * jump, ForceMode2D.Force);
-        // }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Instantiate(discSlime, Vector2.up, Quaternion.identity);
-        }
 
+
+    }
+
+    public void Split()
+    {
+        Instantiate(discSlime, Vector2.up, Quaternion.identity);
     }
     public void Run(Vector2 dir)
     {
