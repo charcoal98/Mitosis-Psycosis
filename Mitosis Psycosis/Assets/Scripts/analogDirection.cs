@@ -1,0 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class analogDirection : MonoBehaviour
+{
+    SpriteRenderer _sr;
+    public float rightStickX;
+    public float  rightStickY;
+    public float stickAngle;
+
+    public Vector2 rightStick;
+    public GameObject pseudoParent;
+    public Sprite[] sprites;
+    
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Create Vector Based on the right stick x and y
+        rightStickX = Input.GetAxis("RightStickX");
+        rightStickY = Input.GetAxis("RightStickY");
+        rightStick = new Vector2(rightStickX, rightStickY);
+
+        //calculate the angle of rightStick reletive to Vector2.right
+        stickAngle = Vector2.SignedAngle(Vector2.right, rightStick);
+
+        //Change rotation based on the current stickAngle
+        transform.rotation = Quaternion.Euler(0, 0, stickAngle);
+
+        //bind position of current gameObject to another with out making it a child and inheriting all of the other properties
+        transform.position = pseudoParent.transform.position;
+        /* Debug.Log(sprites[0]);
+        if (rightStickX == 0 && rightStickY == 0)
+        {
+            _sr.sprite = sprites[0];
+        }
+        else
+        {
+            _sr.sprite = sprites[1];
+        }*/
+    }
+}
