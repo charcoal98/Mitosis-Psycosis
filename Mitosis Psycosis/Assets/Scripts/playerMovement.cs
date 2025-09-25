@@ -17,7 +17,9 @@ public class playerMovement : MonoBehaviour
     public float moveSpeed;
     public float jump;
     //Game object for the discarded slime
-    public GameObject discSlime;
+    public GameObject discSlimeObj;
+    public deadSlime discSlimeScript;
+    public int discSize;
     //Game object for the arrow
     public GameObject arrow;
     public GameObject parentSlime;
@@ -26,8 +28,7 @@ public class playerMovement : MonoBehaviour
     public bool splitCoolDown = false;
     //Size of the player Slime and the discarded component
     public int slimeSize = 5;
-    public int discSize = 2;
-    public float scaleTemp;
+
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +40,7 @@ public class playerMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         //get components from arrow
         anaDirection = arrow.GetComponent<analogDirection>();
+        discSlimeScript = discSlimeObj.GetComponent<deadSlime>();
 
         //Initalize the slime scale and color
         ControlSize();
@@ -70,6 +72,12 @@ public class playerMovement : MonoBehaviour
         {
             splitCoolDown = false;
         }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            slimeSize = 4;
+            Jump(Vector2.up);
+            ControlSize();
+        }
     }
 
     public void Split()
@@ -95,18 +103,19 @@ public class playerMovement : MonoBehaviour
             default:
                 return;
         }
-        ControlSize();
-        SpawnDesc();
         if (Mathf.Abs(anaDirection.rightStickX) > 0 || Mathf.Abs(anaDirection.rightStickY) > 0)
-                {
-            Jump(anaDirection.rightStick);
+        {
+            Boost(anaDirection.rightStick);
         }
         else
         {
-            Jump(new Vector2(1,1));
+            Boost(new Vector2(1, 1));
         }
-        
-        
+        ControlSize();
+        SpawnDesc();
+
+
+
 
     }
     public void ControlSize()
@@ -131,23 +140,31 @@ public class playerMovement : MonoBehaviour
             default:
                 return;
         }
-        transform.parent.localScale = new Vector3(slimeSize * (float)1.5,slimeSize * (float)1.5,1);
+        transform.parent.localScale = new Vector3(slimeSize * (float)1.5, slimeSize * (float)1.5, 1);
     }
     public void SpawnDesc()
     {
-        Debug.Log(transform.localScale.x);
+        //Debug.Log(transform.localScale.x);
         //transform eject = new transform();
         //Posistion of eject transform is found 
         //Vector3 eject = new Vector3((anaDirection.rightStickX * transform.localScale.x * -1), (anaDirection.rightStickY * transform.localScale.y * -1), 0);
+        //discSlime.slimeSize = discSize;
         //Instantiate(discSlime, eject, Quaternion.identity);
     }
     public void Run(Vector2 dir)
     {
-        _rb.AddForce(new Vector2(dir.x * moveSpeed, 0));
+        _rb.AddForce(new Vector2(dir.x * moveSpeed * Time.deltaTime, 0), ForceMode2D.Impulse);
     }
     public void Jump(Vector2 dir)
     {
-        _rb.velocity = new Vector2(_rb.velocity.x, 0);
-        _rb.velocity += dir * jump;
+        _rb.AddForce(dir * jump, ForceMode2D.Impulse);
+        // _rb.velocity += dir * jump;
+    }
+    public void Boost(Vector2 dir)
+    {
+        Debug.Log(dir.x + " " + dir.y);
+        Vector2 x = dir * 10 * slimeSize;
+        Debug.Log(x.x + " " + x.y);
+        _rb.AddForce(dir * 10 * slimeSize, ForceMode2D.Impulse);
     }
 }
