@@ -41,6 +41,13 @@ public class playerMovement : MonoBehaviour
     //Determins whether the player can split
     public bool splitCoolDown;
     
+    //temporary variables for testing
+
+    //circlecast
+    public float castRadius = 1.0f;
+    public float castDistance = 0.2f;
+    public Vector2 direction2 = Vector2.down;
+    public Vector2 origin;
 
 
     // Start is called before the first frame update
@@ -63,7 +70,10 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   //Needs Fixing to scale with the slime
-        grounded = Physics2D.CircleCast(transform.position, transform.parent.localScale.x / 30, Vector2.down, .14f);
+        origin = transform.position;
+        castRadius = scaleSize(playerSlimeSize) / 7.5f;
+        castDistance = scaleSize(playerSlimeSize) * (.2f/7.5f);
+        grounded = Physics2D.CircleCast(origin, castRadius, Vector2.down, castDistance);
         
         float y = Input.GetAxis("Vertical");
         float x = Input.GetAxis("Horizontal");
@@ -118,7 +128,7 @@ public class playerMovement : MonoBehaviour
         Vector3 eject;
         if (Mathf.Abs(anaDirection.rightStickX) > 0 || Mathf.Abs(anaDirection.rightStickY) > 0)
         {
-            eject = new Vector3((anaDirection.rightStickX * transform.localScale.x), (anaDirection.rightStickY * transform.localScale.y), 0);
+            eject = new Vector3((anaDirection.rightStickX * scaleSize(playerSlimeSize)), (anaDirection.rightStickY * scaleSize(playerSlimeSize)), 0);
         }
         else
         {
@@ -151,11 +161,11 @@ public class playerMovement : MonoBehaviour
 
         //Instantiate two new slimes
         if (!grounded){
-            ejectedSlimeSpawn(eject * -1/2, discardedSlime);
-            ejectedSlimeSpawn(eject / totalSize, newPlayerSlime);
+            ejectedSlimeSpawn(eject * -1 /2, discardedSlime);
+            ejectedSlimeSpawn(eject / 2, newPlayerSlime);
         } else {
             ejectedSlimeSpawn(new Vector3(0,0,0), discardedSlime);
-            ejectedSlimeSpawn(eject / totalSize, newPlayerSlime);
+            ejectedSlimeSpawn((eject)*2, newPlayerSlime);
         }
 
         //Delete existing slime
@@ -170,6 +180,7 @@ public class playerMovement : MonoBehaviour
         GameObject newProjectile = Instantiate(obj);
         newProjectile.transform.position = transform.position + eject;
         Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
+        newRB.velocity = Vector3.zero;
         newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
     }
 
@@ -209,4 +220,16 @@ public class playerMovement : MonoBehaviour
         centerBoneRB.AddForce(dir * jump, ForceMode2D.Impulse);
         // centerBoneRB.velocity += dir * jump;
     }
+    /*void OnDrawGizmos()
+    {        
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(origin, castRadius);
+        
+        Gizmos.color = Color.yellow;
+        Vector2 endPosition = origin + Vector2.down * .2f;
+        Gizmos.DrawWireSphere(endPosition, castRadius);
+        
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(origin, endPosition);
+    }*/
 }
