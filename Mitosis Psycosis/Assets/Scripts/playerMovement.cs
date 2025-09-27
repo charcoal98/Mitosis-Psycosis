@@ -1,33 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class playerMovement : MonoBehaviour
 {
     //Outlets
-    Rigidbody2D _rb;
-    //Rigidbody2d _parentrb;
-    SpriteRenderer _sr;
+    Rigidbody2D centerBoneRB;
 
-    //Config
+    SpriteRenderer newPlayerSlimeSprite;
 
     //Tells whether player is on ground
     public bool grounded;
+
+    //boost force
+    public int boostForce;
+
     //movement parameters
     public float moveSpeed;
     public float jump;
+
     //Game object for the discarded slime
-    public GameObject discSlimeObj;
-    public deadSlime discSlimeScript;
-    public int discSize;
+    public GameObject discardedSlime;
+    public deadSlime discardedSlimeScript;
+    
+
+    //Game object for the player slime
+    public GameObject newPlayerSlime;
+    public playerMovement slimeMovement;
+
+    //Size of the player Slime and the discarded component
+    public int playerSlimeSize;
+    public int discardedSlimeSize;
+    
     //Game object for the arrow
     public GameObject arrow;
     public GameObject parentSlime;
     public analogDirection anaDirection;
+
     //Determins whether the player can split
-    public bool splitCoolDown = false;
-    //Size of the player Slime and the discarded component
-    public int slimeSize = 5;
+    public bool splitCoolDown;
+    
 
 
     // Start is called before the first frame update
@@ -35,21 +48,23 @@ public class playerMovement : MonoBehaviour
     {
         //get components from parent
         //_parentrb = GetComponentInParent<Rigidbody2D>();
-        _sr = GetComponentInParent<SpriteRenderer>();
+        
         //get components from current gameObject
-        _rb = GetComponent<Rigidbody2D>();
+        centerBoneRB = GetComponent<Rigidbody2D>();
+
         //get components from arrow
         anaDirection = arrow.GetComponent<analogDirection>();
-        discSlimeScript = discSlimeObj.GetComponent<deadSlime>();
 
-        //Initalize the slime scale and color
-        ControlSize();
+        //get player and discared slime scripts
+        discardedSlimeScript = discardedSlime.GetComponent<deadSlime>();
+        slimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
     }
 
     // Update is called once per frame
     void Update()
     {   //Needs Fixing to scale with the slime
         grounded = Physics2D.CircleCast(transform.position, transform.parent.localScale.x / 30, Vector2.down, .14f);
+        
         float y = Input.GetAxis("Vertical");
         float x = Input.GetAxis("Horizontal");
 
@@ -60,67 +75,108 @@ public class playerMovement : MonoBehaviour
         {
             Jump(Vector2.up);
         }
-        if (Input.GetAxis("Split") > 0 && (slimeSize > 1))
+
+        if (Input.GetAxis("Split") > 0 && (playerSlimeSize > 1))
         {
             if (!splitCoolDown)
             {
                 Split();
-                splitCoolDown = true;
             }
         }
         else if (grounded)
         {
             splitCoolDown = false;
         }
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            slimeSize = 4;
-            Jump(Vector2.up);
-            ControlSize();
+        if (Input.GetKey(KeyCode.Space)){
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
     public void Split()
     {
-        switch (slimeSize)
+        switch (playerSlimeSize)
         {
             case 5:
-                slimeSize = 3;
-                discSize = 2;
+                playerSlimeSize = 3;
+                discardedSlimeSize = 2;
                 break;
             case 4:
-                slimeSize = 2;
-                discSize = 2;
+                playerSlimeSize = 2;
+                discardedSlimeSize = 2;
                 break;
             case 3:
-                slimeSize = 2;
-                discSize = 1;
+                playerSlimeSize = 2;
+                discardedSlimeSize = 1;
                 break;
             case 2:
-                slimeSize = 1;
-                discSize = 1;
+                playerSlimeSize = 1;
+                discardedSlimeSize = 1;
                 break;
             default:
                 return;
         }
+        Vector3 eject;
         if (Mathf.Abs(anaDirection.rightStickX) > 0 || Mathf.Abs(anaDirection.rightStickY) > 0)
         {
-            Boost(anaDirection.rightStick);
+            eject = new Vector3((anaDirection.rightStickX * transform.localScale.x), (anaDirection.rightStickY * transform.localScale.y), 0);
         }
         else
         {
-            Boost(new Vector2(1, 1));
+            eject = new Vector3(1,1,0);
         }
-        ControlSize();
-        SpawnDesc();
-
-
-
-
+        SpawnSplitSlimes(eject);
     }
-    public void ControlSize()
+    
+    public void SpawnSplitSlimes(Vector3 eject)
     {
-        switch (slimeSize)
+        //discardedSlime.playerSlimeSize = discardedSlimeSize;
+        //Transform objects before spawning them
+        ControlSize(newPlayerSlime, playerSlimeSize);
+        ControlSize(discardedSlime, discardedSlimeSize);
+
+        //transfer Variables
+        //newPlayerSlime
+        slimeMovement.splitCoolDown = true;
+        slimeMovement.playerSlimeSize = playerSlimeSize;
+        slimeMovement.discardedSlimeSize = discardedSlimeSize;
+        newPlayerSlime.transform.position = transform.position;
+
+        //DiscardedSlime
+        discardedSlime.transform.position = transform.position;
+
+
+        
+        //Instantiate two new slimes
+        float totalSize = scaleSize(discardedSlimeSize) + scaleSize(playerSlimeSize);
+
+        //Instantiate two new slimes
+        if (!grounded){
+            ejectedSlimeSpawn(eject * -1/2, discardedSlime);
+            ejectedSlimeSpawn(eject / totalSize, newPlayerSlime);
+        } else {
+            ejectedSlimeSpawn(new Vector3(0,0,0), discardedSlime);
+            ejectedSlimeSpawn(eject / totalSize, newPlayerSlime);
+        }
+
+        //Delete existing slime
+        Destroy(transform.parent.gameObject);
+    }
+
+    public float scaleSize(int size){
+        return size * (float)1.5;
+    }
+
+    public void ejectedSlimeSpawn(Vector3 eject, GameObject obj){
+        GameObject newProjectile = Instantiate(obj);
+        newProjectile.transform.position = transform.position + eject;
+        Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
+        newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
+    }
+
+    public void ControlSize(GameObject slime, int size)
+    {
+        SpriteRenderer _sr = slime.GetComponent<SpriteRenderer>();
+        switch (size)
         {
             case 5:
                 _sr.color = Color.red;
@@ -140,31 +196,17 @@ public class playerMovement : MonoBehaviour
             default:
                 return;
         }
-        transform.parent.localScale = new Vector3(slimeSize * (float)1.5, slimeSize * (float)1.5, 1);
+        slime.transform.localScale = new Vector3(scaleSize(size), scaleSize(size), 1);
     }
-    public void SpawnDesc()
-    {
-        //Debug.Log(transform.localScale.x);
-        //transform eject = new transform();
-        //Posistion of eject transform is found 
-        //Vector3 eject = new Vector3((anaDirection.rightStickX * transform.localScale.x * -1), (anaDirection.rightStickY * transform.localScale.y * -1), 0);
-        //discSlime.slimeSize = discSize;
-        //Instantiate(discSlime, eject, Quaternion.identity);
-    }
+
+    //Movement
     public void Run(Vector2 dir)
     {
-        _rb.AddForce(new Vector2(dir.x * moveSpeed * Time.deltaTime, 0), ForceMode2D.Impulse);
+        centerBoneRB.AddForce(new Vector2(dir.x * moveSpeed * Time.deltaTime, 0), ForceMode2D.Impulse);
     }
     public void Jump(Vector2 dir)
     {
-        _rb.AddForce(dir * jump, ForceMode2D.Impulse);
-        // _rb.velocity += dir * jump;
-    }
-    public void Boost(Vector2 dir)
-    {
-        Debug.Log(dir.x + " " + dir.y);
-        Vector2 x = dir * 10 * slimeSize;
-        Debug.Log(x.x + " " + x.y);
-        _rb.AddForce(dir * 10 * slimeSize, ForceMode2D.Impulse);
+        centerBoneRB.AddForce(dir * jump, ForceMode2D.Impulse);
+        // centerBoneRB.velocity += dir * jump;
     }
 }
