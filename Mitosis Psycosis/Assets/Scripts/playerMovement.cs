@@ -27,7 +27,7 @@ public class playerMovement : MonoBehaviour
 
     //Game object for the player slime
     public GameObject newPlayerSlime;
-    public playerMovement slimeMovement;
+    public playerMovement newSlimeMovement;
 
     //Size of the player Slime and the discarded component
     public int playerSlimeSize;
@@ -65,28 +65,32 @@ public class playerMovement : MonoBehaviour
 
         //get player and discared slime scripts
         discardedSlimeScript = discardedSlime.GetComponent<deadSlime>();
-        slimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
+        newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
     }
 
     // Update is called once per frame
     void Update()
-    {   //Needs Fixing to scale with the slime
+    {   //Grounded Check Remove single use Variables later
         origin = transform.position;
         castRadius = ScaleSize(playerSlimeSize) / 7.5f;
         castDistance = ScaleSize(playerSlimeSize) * (.2f / 7.5f);
         grounded = Physics2D.CircleCast(origin, castRadius, Vector2.down, castDistance);
 
+        //Move
         float y = Input.GetAxis("Vertical");
         float x = Input.GetAxis("Horizontal");
 
         Vector2 direction = new Vector2(x, y);
         Run(direction);
 
+        //Jump
         if (Input.GetButtonDown("Jump") && grounded)
         {
             Jump(Vector2.up);
         }
 
+
+        //Split if not on cooldown and right trigger pressed
         if (Input.GetAxis("Split") > 0 && (playerSlimeSize > 1))
         {
             if (!splitCoolDown)
@@ -112,8 +116,6 @@ public class playerMovement : MonoBehaviour
             //Delete existing slime
             Destroy(transform.parent.gameObject);
         }*/
-        
-    
     }
 
     public void Split()
@@ -163,18 +165,13 @@ public class playerMovement : MonoBehaviour
 
         //transfer Variables
         //newPlayerSlime
-        slimeMovement.splitCoolDown = true;
-        slimeMovement.playerSlimeSize = playerSlimeSize;
-        slimeMovement.discardedSlimeSize = discardedSlimeSize;
+        newSlimeMovement.splitCoolDown = true;
+        newSlimeMovement.playerSlimeSize = playerSlimeSize;
+        newSlimeMovement.discardedSlimeSize = discardedSlimeSize;
         newPlayerSlime.transform.position = transform.position;
 
         //DiscardedSlime
         discardedSlime.transform.position = transform.position;
-
-
-        
-        //Instantiate two new slimes
-        float totalSize = ScaleSize(discardedSlimeSize) + ScaleSize(playerSlimeSize);
 
         //Instantiate two new slimes
         if (!grounded){
@@ -191,18 +188,24 @@ public class playerMovement : MonoBehaviour
         Destroy(transform.parent.gameObject);
     }
 
-    public float ScaleSize(int size){
-        return size * (float)1.5;
-    }
+    
 
     //will need to add detection in case the spawned pieces end up in a wall
     public void EjectedSlimeSpawn(Vector3 eject, GameObject obj)
     {
-        Debug.Log(obj.tag + "Transform: " + transform.position.x + "x" + transform.position.y);
-        Debug.Log(obj.tag + "Eject: " + eject.x + "x" + eject.y);
+        Debug.Log(obj.tag + " Transform: " + transform.position.x + "x" + transform.position.y);
+        Debug.Log(obj.tag + " Eject: " + eject.x + "x" + eject.y);
+
+        //Create object
         GameObject newProjectile = Instantiate(obj);
+        
+        //set object position
         newProjectile.transform.position = transform.position + eject;
+        Debug.Log(obj.tag + " Object Transform: " + newProjectile.transform.position.x + "x" + newProjectile.transform.position.y);
+
+        //Add Force
         Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
+        newRB.MovePosition(newProjectile.transform.position);
         newRB.velocity = Vector3.zero;
         newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
 
@@ -238,6 +241,12 @@ public class playerMovement : MonoBehaviour
                 return;
         }
         slime.transform.localScale = new Vector3(ScaleSize(size), ScaleSize(size), 1);
+    }
+
+    //Returns the size of the transform at current slimeSize
+    public float ScaleSize(int size)
+    {
+        return size * (float)1.5;
     }
 
     //Movement
