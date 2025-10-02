@@ -204,11 +204,11 @@ public class playerMovement : MonoBehaviour
         DebugEject = eject + transform.position;
         DebugOrigin = transform.position;
 
-        GameObject newProjectile = Instantiate(obj);
+        GameObject newProjectile = Instantiate(obj, null, true);
 
         //set object position
         
-        newProjectile.transform.position = transform.position + eject;
+      //  newProjectile.transform.position = transform.position + eject;
         Debug.Log(obj.tag + " Object Transform: " + newProjectile.transform.position.x + "x" + newProjectile.transform.position.y);
 
         //Add Force
