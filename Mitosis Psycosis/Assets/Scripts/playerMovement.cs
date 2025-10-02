@@ -48,7 +48,8 @@ public class playerMovement : MonoBehaviour
     public float castDistance = 0.2f;
     public Vector2 direction2 = Vector2.down;
     public Vector2 origin;
-
+    public Vector3 DebugEject;
+    public Vector3 DebugOrigin;
 
     // Start is called before the first frame update
     void Start()
@@ -116,6 +117,8 @@ public class playerMovement : MonoBehaviour
             //Delete existing slime
             Destroy(transform.parent.gameObject);
         }*/
+        
+        Debug.DrawLine(DebugOrigin, DebugEject, Color.green);
     }
 
     public void Split()
@@ -197,17 +200,22 @@ public class playerMovement : MonoBehaviour
         Debug.Log(obj.tag + " Eject: " + eject.x + "x" + eject.y);
 
         //Create object
+        Debug.DrawLine(transform.position, transform.position + eject, Color.yellow);
+        DebugEject = eject + transform.position;
+        DebugOrigin = transform.position;
+
         GameObject newProjectile = Instantiate(obj);
-        
+
         //set object position
+        
         newProjectile.transform.position = transform.position + eject;
         Debug.Log(obj.tag + " Object Transform: " + newProjectile.transform.position.x + "x" + newProjectile.transform.position.y);
 
         //Add Force
-        Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
+        /*Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
         newRB.MovePosition(newProjectile.transform.position);
         newRB.velocity = Vector3.zero;
-        newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
+        newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);*/
 
     }
     public void SpawnSlime(Vector3 eject, GameObject obj)
