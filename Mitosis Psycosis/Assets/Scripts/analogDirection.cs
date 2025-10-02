@@ -26,7 +26,7 @@ public class analogDirection : MonoBehaviour
         rightStickX = Input.GetAxis("RightStickX");
         rightStickY = Input.GetAxis("RightStickY");
         rightStick = new Vector2(rightStickX, rightStickY);
-        Debug.DrawLine(transform.position, transform.position + new Vector3(rightStickX, rightStickY, 0), Color.red);
+        Debug.DrawLine(transform.position, transform.position + new Vector3(rightStickX, rightStickY, 0), Color.yellow);
 
         //calculate the angle of rightStick reletive to Vector2.right
         stickAngle = Vector2.SignedAngle(Vector2.right, rightStick);
