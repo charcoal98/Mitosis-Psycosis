@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class playerMovement : MonoBehaviour
 {
@@ -48,6 +49,7 @@ public class playerMovement : MonoBehaviour
     public float castDistance = 0.2f;
     public Vector2 direction2 = Vector2.down;
     public Vector2 origin;
+    Vector2 movement;
 
 
     // Start is called before the first frame update
@@ -72,10 +74,10 @@ public class playerMovement : MonoBehaviour
     {   //Needs Fixing to scale with the slime
         origin = transform.position;
         castRadius = scaleSize(playerSlimeSize) / 7.5f;
-        castDistance = scaleSize(playerSlimeSize) * (.2f/7.5f);
+        castDistance = scaleSize(playerSlimeSize) * (.2f / 7.5f);
         grounded = Physics2D.CircleCast(origin, castRadius, Vector2.down, castDistance);
-        
-        float y = Input.GetAxis("Vertical");
+        Run(movement);
+        /*float y = Input.GetAxis("Vertical");
         float x = Input.GetAxis("Horizontal");
 
         Vector2 direction = new Vector2(x, y);
@@ -84,21 +86,35 @@ public class playerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && grounded)
         {
             Jump(Vector2.up);
-        }
+        }*/
 
-        if (Input.GetAxis("Split") > 0 && (playerSlimeSize > 1))
-        {
-            if (!splitCoolDown)
-            {
-                Split();
-            }
-        }
-        else if (grounded)
+
+        if (grounded)
         {
             splitCoolDown = false;
         }
-        if (Input.GetKey(KeyCode.Space)){
+
+        if (Input.GetKey(KeyCode.Space))
+        {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        }
+    }
+    void OnMove(InputValue value)
+    {
+        movement = value.Get<Vector2>();
+    }
+
+    void OnJump()
+    {
+        Jump(Vector2.up);
+    }
+
+    void OnSplit()
+    {
+        if ((playerSlimeSize > 1) && !(splitCoolDown))
+        {
+            Split();
         }
     }
 
@@ -132,7 +148,7 @@ public class playerMovement : MonoBehaviour
         }
         else
         {
-            eject = new Vector3(1,1,0);
+            eject = new Vector3(1, 1, 0);
         }
         SpawnSplitSlimes(eject);
     }
@@ -165,7 +181,7 @@ public class playerMovement : MonoBehaviour
             ejectedSlimeSpawn(eject / 2, newPlayerSlime);
         } else {
             ejectedSlimeSpawn(new Vector3(0,0,0), discardedSlime);
-            ejectedSlimeSpawn((eject)*2, newPlayerSlime);
+            ejectedSlimeSpawn((eject), newPlayerSlime);
         }
 
         //Delete existing slime

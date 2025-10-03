@@ -618,6 +618,7 @@ GameObject:
   - component: {fileID: 4391648503199889639}
   - component: {fileID: 6344276766362554320}
   - component: {fileID: 1648189939195581894}
+  - component: {fileID: 5413426950300741519}
   m_Layer: 7
   m_Name: bone_1
   m_TagString: Untagged
@@ -732,6 +733,52 @@ MonoBehaviour:
   castDistance: 0.2
   direction2: {x: 0, y: -1}
   origin: {x: 0, y: 0}
+--- !u!114 &5413426950300741519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3735727971449818971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 86087e20b00d8d836b39c5b9847b6834, type: 3}
+  m_NotificationBehavior: 1
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8d31cf82-2962-44b8-b332-a977be87a081
+    m_ActionName: Game Controls/OnSplit[/Gamepad/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0861b6d1-1bd7-40bb-99d1-ab64e91db853
+    m_ActionName: Game Controls/Move[/Gamepad/dpad/up,/Gamepad/dpad/down,/Gamepad/dpad/left,/Gamepad/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b9f0d8bc-da6e-4b8c-a0ad-e9220022ba14
+    m_ActionName: Game Controls/Jump[/Gamepad/leftTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7a3c3553-6a49-41a2-ba34-73bfc6536d67
+    m_ActionName: Game Controls/RightStick[/Gamepad/rightStick/up,/Gamepad/rightStick/down,/Gamepad/rightStick/left,/Gamepad/rightStick/right]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Game Controls
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &3936874018834592779
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,6 +1112,7 @@ GameObject:
   - component: {fileID: 9208902702338277766}
   - component: {fileID: 9200905736763961055}
   - component: {fileID: 5141944769304066788}
+  - component: {fileID: 7639365893274308008}
   m_Layer: 0
   m_Name: AnalogDirection
   m_TagString: Untagged
@@ -1159,6 +1207,36 @@ MonoBehaviour:
   sprites:
   - {fileID: -198977480, guid: ebef60fa77e973a2091c502dd451a792, type: 3}
   - {fileID: -2147479857, guid: ebef60fa77e973a2091c502dd451a792, type: 3}
+--- !u!114 &7639365893274308008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5629736610481509120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 86087e20b00d8d836b39c5b9847b6834, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Game Controls
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &6045187902910915466
 GameObject:
   m_ObjectHideFlags: 0

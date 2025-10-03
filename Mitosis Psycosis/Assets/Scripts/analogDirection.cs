@@ -1,18 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 public class analogDirection : MonoBehaviour
 {
     SpriteRenderer _sr;
     public float rightStickX;
-    public float  rightStickY;
+    public float rightStickY;
     public float stickAngle;
 
-    public Vector2 rightStick;
+    public Vector2 rightStick = new Vector2(1, 1);
     public GameObject pseudoParent;
     public Sprite[] sprites;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,9 +23,9 @@ public class analogDirection : MonoBehaviour
     void Update()
     {
         //Create Vector Based on the right stick x and y
-        rightStickX = Input.GetAxis("RightStickX");
-        rightStickY = Input.GetAxis("RightStickY");
-        rightStick = new Vector2(rightStickX, rightStickY);
+        rightStickX = rightStick.x;
+        rightStickY = rightStick.y;
+        //rightStick = new Vector2(1, 1);
 
         //calculate the angle of rightStick reletive to Vector2.right
         stickAngle = Vector2.SignedAngle(Vector2.right, rightStick);
@@ -45,4 +45,11 @@ public class analogDirection : MonoBehaviour
             _sr.sprite = sprites[1];
         }*/
     }
+    void OnRightStick(InputValue value)
+    {
+        rightStick = value.Get<Vector2>().normalized;
+    }
+
 }
+
+

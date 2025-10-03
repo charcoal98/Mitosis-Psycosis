@@ -342,6 +342,69 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &323857846 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3735727971449818971, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+  m_PrefabInstance: {fileID: 6054901750955296574}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &323857851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 323857846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 86087e20b00d8d836b39c5b9847b6834, type: 3}
+  m_NotificationBehavior: 1
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 851326982375937651, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 8d31cf82-2962-44b8-b332-a977be87a081
+    m_ActionName: Game Controls/Split[/Gamepad/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0861b6d1-1bd7-40bb-99d1-ab64e91db853
+    m_ActionName: Game Controls/Move[/Gamepad/dpad/up,/Gamepad/dpad/down,/Gamepad/dpad/left,/Gamepad/dpad/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b9f0d8bc-da6e-4b8c-a0ad-e9220022ba14
+    m_ActionName: Game Controls/Jump[/Gamepad/leftTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7a3c3553-6a49-41a2-ba34-73bfc6536d67
+    m_ActionName: Game Controls/RightStick[/Gamepad/rightStick/up,/Gamepad/rightStick/down,/Gamepad/rightStick/left,/Gamepad/rightStick/right]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Game Controls
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -840,6 +903,46 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.y
       value: 0.1029513
       objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_NotificationBehavior
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_ActionId
+      value: 8d31cf82-2962-44b8-b332-a977be87a081
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionId
+      value: 0861b6d1-1bd7-40bb-99d1-ab64e91db853
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionId
+      value: b9f0d8bc-da6e-4b8c-a0ad-e9220022ba14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionId
+      value: 7a3c3553-6a49-41a2-ba34-73bfc6536d67
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.data[0].m_ActionName
+      value: Game Controls/split[/Gamepad/rightTrigger]
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionName
+      value: Game Controls/move[/Gamepad/dpad/up,/Gamepad/dpad/down,/Gamepad/dpad/left,/Gamepad/dpad/right]
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_ActionName
+      value: Game Controls/jump[/Gamepad/leftTrigger]
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639365893274308008, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      propertyPath: m_ActionEvents.Array.data[3].m_ActionName
+      value: Game Controls/RightStick[/Gamepad/rightStick/up,/Gamepad/rightStick/down,/Gamepad/rightStick/left,/Gamepad/rightStick/right]
+      objectReference: {fileID: 0}
     - target: {fileID: 9141903426634181476, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
       propertyPath: m_Name
       value: mainSlime Size 5
@@ -855,7 +958,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3735727971449818971, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 323857851}
   m_SourcePrefab: {fileID: 100100000, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
