@@ -20,15 +20,6 @@ public class playerMovement : MonoBehaviour
     public float moveSpeed;
     public float jump;
 
-    //Game object for the discarded slime
-    public GameObject discardedSlime;
-    public deadSlime discardedSlimeScript;
-    
-
-    //Game object for the player slime
-    public GameObject newPlayerSlime;
-    public playerMovement newSlimeMovement;
-
     //Size of the player Slime and the discarded component
     public int playerSlimeSize;
     public int discardedSlimeSize;
@@ -63,10 +54,6 @@ public class playerMovement : MonoBehaviour
 
         //get components from arrow
         anaDirection = arrow.GetComponent<analogDirection>();
-
-        //get player and discared slime scripts
-        discardedSlimeScript = discardedSlime.GetComponent<deadSlime>();
-        newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
     }
 
     // Update is called once per frame
@@ -156,36 +143,31 @@ public class playerMovement : MonoBehaviour
         SpawnSplitSlimes(eject);
     }
     
-    public void SpawnSplitSlimes(Vector3 eject)
-    {
-        eject.Normalize();
-        //discardedSlime.playerSlimeSize = discardedSlimeSize;
-        //Transform objects before spawning them
-        ControlSize(newPlayerSlime, playerSlimeSize);
-        ControlSize(discardedSlime, discardedSlimeSize);
-
+    public void SpawnSplitSlimes(Vector3 eject) {
+        // Prevent the current slime from splitting anymore
+        splitCoolDown = true;
         
-
+        eject.Normalize();
+        
+        //Instantiate two new slimes
+        GameObject newPlayerSlime = null;
+        GameObject newDiscardSlime = null;
+        if (!grounded){
+            newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
+            newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
+        } else {
+            newPlayerSlime = EjectedSlimeSpawn(eject*2, PrefabManager.instance.newPlayerSlime);
+            newDiscardSlime = EjectedSlimeSpawn(new Vector3(0,0,0), PrefabManager.instance.discardedSlime);
+        }
+        
+        ControlSize(newPlayerSlime, playerSlimeSize);
+        ControlSize(newDiscardSlime, discardedSlimeSize);
+        
         //transfer Variables
-        //newPlayerSlime
+        playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
         newSlimeMovement.splitCoolDown = true;
         newSlimeMovement.playerSlimeSize = playerSlimeSize;
         newSlimeMovement.discardedSlimeSize = discardedSlimeSize;
-        newPlayerSlime.transform.position = transform.position;
-
-        //DiscardedSlime
-        discardedSlime.transform.position = transform.position;
-
-        //Instantiate two new slimes
-        if (!grounded){
-            EjectedSlimeSpawn(eject, newPlayerSlime);
-            EjectedSlimeSpawn(eject * -1, discardedSlime);
-            
-        } else {
-            EjectedSlimeSpawn(eject*2, newPlayerSlime);
-            EjectedSlimeSpawn(new Vector3(0,0,0), discardedSlime);
-            
-        }
 
         //Delete existing slime
         Destroy(transform.parent.gameObject);
@@ -194,7 +176,7 @@ public class playerMovement : MonoBehaviour
     
 
     //will need to add detection in case the spawned pieces end up in a wall
-    public void EjectedSlimeSpawn(Vector3 eject, GameObject obj)
+    public GameObject EjectedSlimeSpawn(Vector3 eject, GameObject obj)
     {
         Debug.Log(obj.tag + " Transform: " + transform.position.x + "x" + transform.position.y);
         Debug.Log(obj.tag + " Eject: " + eject.x + "x" + eject.y);
@@ -212,11 +194,11 @@ public class playerMovement : MonoBehaviour
         Debug.Log(obj.tag + " Object Transform: " + newProjectile.transform.position.x + "x" + newProjectile.transform.position.y);
 
         //Add Force
-        /*Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
-        newRB.MovePosition(newProjectile.transform.position);
+        Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
         newRB.velocity = Vector3.zero;
-        newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);*/
+        newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
 
+        return newProjectile;
     }
     public void SpawnSlime(Vector3 eject, GameObject obj)
     {
