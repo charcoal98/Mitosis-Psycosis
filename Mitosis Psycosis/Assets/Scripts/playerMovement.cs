@@ -108,6 +108,25 @@ public class playerMovement : MonoBehaviour
         Debug.DrawLine(DebugOrigin, DebugEject, Color.green);
     }
 
+    //controller Events
+    void OnMove(InputValue value)
+    {
+        movement = value.Get<Vector2>();
+    }
+
+    void OnJump()
+    {
+        Jump(Vector2.up);
+    }
+
+    void OnSplit()
+    {
+        if ((playerSlimeSize > 1) && !(splitCoolDown))
+        {
+            Split();
+        }
+    }
+
     public void Split()
     {
         switch (playerSlimeSize)
@@ -138,7 +157,7 @@ public class playerMovement : MonoBehaviour
         }
         else
         {
-            eject = new Vector3(1,1,0).normalized;
+            eject = new Vector3(1, 1, 0).normalized;
         }
         SpawnSplitSlimes(eject);
     }
