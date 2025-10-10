@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class playerMovement : MonoBehaviour
 {
@@ -35,19 +36,15 @@ public class playerMovement : MonoBehaviour
     //temporary variables for testing
 
     //circlecast
-    public float castRadius = 1.0f;
-    public float castDistance = 0.2f;
     public Vector2 direction2 = Vector2.down;
-    public Vector2 origin;
     public Vector3 DebugEject;
     public Vector3 DebugOrigin;
+    Vector2 movement;
 
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log(transform.position.x + "x" + transform.position.y);
-        //get components from parent
-        //_parentrb = GetComponentInParent<Rigidbody2D>();
 
         //get components from current gameObject
         centerBoneRB = GetComponent<Rigidbody2D>();
@@ -59,51 +56,28 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   //Grounded Check Remove single use Variables later
-        origin = transform.position;
-        castRadius = ScaleSize(playerSlimeSize) / 7.5f;
-        castDistance = ScaleSize(playerSlimeSize) * (.2f / 7.5f);
-        grounded = Physics2D.CircleCast(origin, castRadius, Vector2.down, castDistance);
+        grounded = Physics2D.CircleCast(transform.position, ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, ScaleSize(playerSlimeSize) * (.2f / 7.5f));
 
         //Move
         float y = Input.GetAxis("Vertical");
         float x = Input.GetAxis("Horizontal");
 
-        Vector2 direction = new Vector2(x, y);
-        Run(direction);
+        Run(movement);
 
-        //Jump
-        if (Input.GetButtonDown("Jump") && grounded)
-        {
-            Jump(Vector2.up);
-        }
-
-
-        //Split if not on cooldown and right trigger pressed
-        if (Input.GetAxis("Split") > 0 && (playerSlimeSize > 1))
-        {
-            if (!splitCoolDown)
-            {
-                Split();
-            }
-        }
-        else if (grounded)
+        if (grounded)
         {
             splitCoolDown = false;
         }
+        
         if (Input.GetKey(KeyCode.Space) || (Mathf.Abs(transform.position.y) > 5f))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-        /*if (Mathf.Abs(transform.position.x) > 11f)
+
+        if (Mathf.Abs(transform.position.x) > 11f)
         {
-            centerBoneRB.velocity = Vector3.zero;
-            float largestX = transform.position.x / Mathf.Abs(transform.position.x) * 10;
-            Debug.Log(largestX);
-            //Create new slime in Bounds
-            SpawnSlime(new Vector3(largestX, 0, 0), newPlayerSlime);
-            //Delete existing slime
-            Destroy(transform.parent.gameObject);
-        }*/
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         
         Debug.DrawLine(DebugOrigin, DebugEject, Color.green);
     }
@@ -116,11 +90,14 @@ public class playerMovement : MonoBehaviour
 
     void OnJump()
     {
-        Jump(Vector2.up);
+        if (grounded)
+        {
+            Jump(Vector2.up);
+        }
     }
 
     void OnSplit()
-    {
+    {  
         if ((playerSlimeSize > 1) && !(splitCoolDown))
         {
             Split();
