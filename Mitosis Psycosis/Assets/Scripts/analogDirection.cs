@@ -9,7 +9,7 @@ public class analogDirection : MonoBehaviour
     public float  rightStickY;
     public float stickAngle;
 
-    public Vector2 rightStick;
+    public Vector2 rightStick = new Vector2(1, 1);
     public GameObject pseudoParent;
     public Sprite[] sprites;
     
@@ -23,8 +23,8 @@ public class analogDirection : MonoBehaviour
     void Update()
     {
         //Create Vector Based on the right stick x and y
-        rightStickX = Input.GetAxis("RightStickX");
-        rightStickY = Input.GetAxis("RightStickY");
+        rightStickX = rightStick.x;
+        rightStickY = rightStick.y;
         rightStick = new Vector2(rightStickX, rightStickY);
         Debug.DrawLine(transform.position, transform.position + new Vector3(rightStickX, rightStickY, 0), Color.yellow);
 
@@ -45,5 +45,10 @@ public class analogDirection : MonoBehaviour
         {
             _sr.sprite = sprites[1];
         }*/
+    }
+
+    void OnRightStick(InputValue value)
+    {
+        rightStick = value.Get<Vector2>().normalized;
     }
 }
