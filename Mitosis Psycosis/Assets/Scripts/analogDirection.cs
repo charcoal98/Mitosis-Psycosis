@@ -36,15 +36,11 @@ public class analogDirection : MonoBehaviour
 
         //bind position of current gameObject to another with out making it a child and inheriting all of the other properties
         transform.position = pseudoParent.transform.position;
-        /* Debug.Log(sprites[0]);
+
         if (rightStickX == 0 && rightStickY == 0)
         {
-            _sr.sprite = sprites[0];
+            rightStick = new Vector2(1, 1);
         }
-        else
-        {
-            _sr.sprite = sprites[1];
-        }*/
     }
 
     void OnRightStick(InputValue value)
