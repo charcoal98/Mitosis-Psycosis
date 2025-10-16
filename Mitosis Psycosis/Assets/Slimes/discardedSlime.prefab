@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8177969822699972799}
   - component: {fileID: 2908041159533573470}
   - component: {fileID: 2485340699770507466}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: discardedSlime
   m_TagString: Discarded
   m_Icon: {fileID: 0}

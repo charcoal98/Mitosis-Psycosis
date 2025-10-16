@@ -57,7 +57,7 @@ public class playerMovement : MonoBehaviour
         //get components from arrow
         anaDirection = arrow.GetComponent<analogDirection>();
 
-
+        //currently unused
         circleCol = GetComponent<CircleCollider2D>();
         
         //Circle Cast components
@@ -73,12 +73,11 @@ public class playerMovement : MonoBehaviour
         grounded = false;
         origin = transform.position;
         RaycastHit2D[] hits = Physics2D.CircleCastAll(origin, castRadius, circleDirection, castDistance);
-        Debug.Log(hits.Length);
         for (int i = 0; i < hits.Length; i++)
         {
             
             RaycastHit2D hit = hits[i];
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
             {
                 grounded = true;
                 
@@ -98,16 +97,10 @@ public class playerMovement : MonoBehaviour
             splitCoolDown = false;
         }
 
-        if (Input.GetKey(KeyCode.Space) /*|| (transform.position.y < -16f)*/)
+        if (Input.GetKey(KeyCode.Space))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-
-        /*if (Mathf.Abs(transform.position.x) > 11f)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }*/
-
         Debug.DrawLine(DebugOrigin, DebugEject, Color.green);
     }
 
@@ -173,22 +166,46 @@ public class playerMovement : MonoBehaviour
         splitCoolDown = true;
 
         eject.Normalize();
-        Debug.Log(eject.magnitude);
-        
+        //Check to see if new slime will spawn in wall
+        bool inWall = false;
+        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, ScaleSize(playerSlimeSize));
+        for (int i = 0; i < hits.Length; i++)
+        {
+
+            RaycastHit2D hit = hits[i];
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                Debug.Log("Blarg");
+                inWall = true;
+            }
+        }
+
         //Instantiate two new slimes
         GameObject newPlayerSlime = null;
         GameObject newDiscardSlime = null;
 
-        
-        newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
-
-        //figure out what to do with the discarded slime
-        if (!grounded)
+        if (inWall)
         {
+            //if the player would be in a wall if they split they shouldn't spawn with an offset
+            newPlayerSlime = EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime);
+            //if the player splits into a wall the discarded piece flys opisite the force
             newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
-        } else {
-            newDiscardSlime = EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime);
         }
+        else
+        {
+            newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
+            //figure out what to do with the discarded slime
+            if (!grounded)
+            {
+                newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
+            } else {
+                newDiscardSlime = EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime);
+            }
+        }
+        
+        
+
+        
         
         ControlSize(newPlayerSlime, playerSlimeSize);
         ControlSize(newDiscardSlime, discardedSlimeSize);
