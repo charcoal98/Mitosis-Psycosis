@@ -667,7 +667,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!58 &6344276766362554320
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -716,7 +716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grounded: 0
-  boostForce: 90
+  boostForce: 87.5
   moveSpeed: 90
   jump: 90
   playerSlimeSize: 5

@@ -17,7 +17,7 @@ public class playerMovement : MonoBehaviour
     public bool grounded;
 
     //boost force
-    public int boostForce;
+    public float boostForce;
 
     //movement parameters
     public float moveSpeed;
@@ -179,6 +179,7 @@ public class playerMovement : MonoBehaviour
         GameObject newPlayerSlime = null;
         GameObject newDiscardSlime = null;
 
+        
         newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
 
         //figure out what to do with the discarded slime

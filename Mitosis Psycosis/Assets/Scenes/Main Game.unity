@@ -1713,7 +1713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1648189939195581894, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
       propertyPath: boostForce
-      value: 90
+      value: 87.5
       objectReference: {fileID: 0}
     - target: {fileID: 1768945416585873754, guid: 9a36e6d247553af47b3e27c5211a9983, type: 3}
       propertyPath: m_ConnectedAnchor.x
