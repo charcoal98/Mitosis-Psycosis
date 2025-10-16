@@ -716,9 +716,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grounded: 0
-  boostForce: 70
-  moveSpeed: 75
-  jump: 75
+  boostForce: 90
+  moveSpeed: 90
+  jump: 90
   playerSlimeSize: 5
   discardedSlimeSize: 2
   arrow: {fileID: 5629736610481509120}
