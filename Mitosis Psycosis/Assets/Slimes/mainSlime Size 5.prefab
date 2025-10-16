@@ -725,7 +725,6 @@ MonoBehaviour:
   parentSlime: {fileID: 0}
   anaDirection: {fileID: 0}
   splitCoolDown: 0
-  direction2: {x: 0, y: -1}
   DebugEject: {x: 0, y: 0, z: 0}
   DebugOrigin: {x: 0, y: 0, z: 0}
 --- !u!114 &3243820359293007602

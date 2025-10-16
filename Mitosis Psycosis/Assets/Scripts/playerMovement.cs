@@ -38,10 +38,15 @@ public class playerMovement : MonoBehaviour
     //temporary variables for testing
 
     //circlecast
-    public Vector2 direction2 = Vector2.down;
     public Vector3 DebugEject;
     public Vector3 DebugOrigin;
     Vector2 movement;
+
+    //Circle Cast Debug
+    float castRadius;
+    float castDistance;
+    Vector2 circleDirection = Vector2.down;
+    Vector2 origin;
 
     // Start is called before the first frame update
     void Start()
@@ -52,23 +57,34 @@ public class playerMovement : MonoBehaviour
         //get components from arrow
         anaDirection = arrow.GetComponent<analogDirection>();
 
-        //
+
         circleCol = GetComponent<CircleCollider2D>();
+        
+        //Circle Cast components
+
+        castRadius = ScaleSize(playerSlimeSize) / 8f;
+
+        castDistance = ScaleSize(playerSlimeSize) * (.3f / 7.5f);
     }
 
     // Update is called once per frame
     void Update()
     {   //Grounded Check Remove single use Variables later
         grounded = false;
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, ScaleSize(playerSlimeSize) * (.2f / 7.5f));
+        origin = transform.position;
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(origin, castRadius, circleDirection, castDistance);
+        Debug.Log(hits.Length);
         for (int i = 0; i < hits.Length; i++)
         {
+            
             RaycastHit2D hit = hits[i];
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 grounded = true;
+                
             }
         }
+
         //grounded = Physics2D.CircleCast(transform.position, ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, ScaleSize(playerSlimeSize) * (.2f / 7.5f));
 
         //Move
@@ -261,5 +277,19 @@ public class playerMovement : MonoBehaviour
     {
         centerBoneRB.AddForce(dir * jump, ForceMode2D.Impulse);
         // centerBoneRB.velocity += dir * jump;
+    }
+
+    //Draw Circle Cast for debuging
+    void OnDrawGizmos()
+    {        
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(origin, castRadius);
+
+        Gizmos.color = Color.yellow;
+        Vector2 endPosition = origin + circleDirection * .2f;
+        Gizmos.DrawWireSphere(endPosition, castRadius);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawLine(origin, endPosition);
     }
 }
