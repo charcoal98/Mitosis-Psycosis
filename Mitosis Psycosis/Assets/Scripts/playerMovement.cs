@@ -11,6 +11,8 @@ public class playerMovement : MonoBehaviour
 
     SpriteRenderer newPlayerSlimeSprite;
 
+    CircleCollider2D circleCol;
+
     //Tells whether player is on ground
     public bool grounded;
 
@@ -44,19 +46,30 @@ public class playerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(transform.position.x + "x" + transform.position.y);
-
         //get components from current gameObject
         centerBoneRB = GetComponent<Rigidbody2D>();
 
         //get components from arrow
         anaDirection = arrow.GetComponent<analogDirection>();
+
+        //
+        circleCol = GetComponent<CircleCollider2D>();
     }
 
     // Update is called once per frame
     void Update()
     {   //Grounded Check Remove single use Variables later
-        grounded = Physics2D.CircleCast(transform.position, ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, ScaleSize(playerSlimeSize) * (.2f / 7.5f));
+        grounded = false;
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position, ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, ScaleSize(playerSlimeSize) * (.2f / 7.5f));
+        for (int i = 0; i < hits.Length; i++)
+        {
+            RaycastHit2D hit = hits[i];
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            {
+                grounded = true;
+            }
+        }
+        //grounded = Physics2D.CircleCast(transform.position, ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, ScaleSize(playerSlimeSize) * (.2f / 7.5f));
 
         //Move
         float y = Input.GetAxis("Vertical");
@@ -68,17 +81,17 @@ public class playerMovement : MonoBehaviour
         {
             splitCoolDown = false;
         }
-        
-        if (Input.GetKey(KeyCode.Space) || (Mathf.Abs(transform.position.y) > 5f))
+
+        if (Input.GetKey(KeyCode.Space) /*|| (transform.position.y < -16f)*/)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
-        if (Mathf.Abs(transform.position.x) > 11f)
+        /*if (Mathf.Abs(transform.position.x) > 11f)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-        
+        }*/
+
         Debug.DrawLine(DebugOrigin, DebugEject, Color.green);
     }
 
@@ -142,18 +155,22 @@ public class playerMovement : MonoBehaviour
     public void SpawnSplitSlimes(Vector3 eject) {
         // Prevent the current slime from splitting anymore
         splitCoolDown = true;
-        
+
         eject.Normalize();
+        Debug.Log(eject.magnitude);
         
         //Instantiate two new slimes
         GameObject newPlayerSlime = null;
         GameObject newDiscardSlime = null;
-        if (!grounded){
-            newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
+
+        newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
+
+        //figure out what to do with the discarded slime
+        if (!grounded)
+        {
             newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
         } else {
-            newPlayerSlime = EjectedSlimeSpawn(eject*2, PrefabManager.instance.newPlayerSlime);
-            newDiscardSlime = EjectedSlimeSpawn(new Vector3(0,0,0), PrefabManager.instance.discardedSlime);
+            newDiscardSlime = EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime);
         }
         
         ControlSize(newPlayerSlime, playerSlimeSize);
@@ -174,8 +191,8 @@ public class playerMovement : MonoBehaviour
     //will need to add detection in case the spawned pieces end up in a wall
     public GameObject EjectedSlimeSpawn(Vector3 eject, GameObject obj)
     {
-        Debug.Log(obj.tag + " Transform: " + transform.position.x + "x" + transform.position.y);
-        Debug.Log(obj.tag + " Eject: " + eject.x + "x" + eject.y);
+        // Debug.Log(obj.tag + " Transform: " + transform.position.x + "x" + transform.position.y);
+        // Debug.Log(obj.tag + " Eject: " + eject.x + "x" + eject.y);
 
         //Create object
         Debug.DrawLine(transform.position, transform.position + eject, Color.yellow);
@@ -187,7 +204,7 @@ public class playerMovement : MonoBehaviour
         //set object position
         
         newProjectile.transform.position = transform.position + eject;
-        Debug.Log(obj.tag + " Object Transform: " + newProjectile.transform.position.x + "x" + newProjectile.transform.position.y);
+        //Debug.Log(obj.tag + " Object Transform: " + newProjectile.transform.position.x + "x" + newProjectile.transform.position.y);
 
         //Add Force
         Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
@@ -198,7 +215,7 @@ public class playerMovement : MonoBehaviour
     }
     public void SpawnSlime(Vector3 eject, GameObject obj)
     {
-        Debug.Log(obj.tag + ": " + (transform.position + eject).x + "x" + (transform.position + eject).y);
+        //Debug.Log(obj.tag + ": " + (transform.position + eject).x + "x" + (transform.position + eject).y);
         GameObject newProjectile = Instantiate(obj);
         newProjectile.transform.position = transform.position + eject;
     }
