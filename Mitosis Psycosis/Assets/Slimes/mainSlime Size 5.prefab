@@ -719,6 +719,8 @@ MonoBehaviour:
   boostForce: 87.5
   moveSpeed: 90
   jump: 90
+  maxSpeed: 15
+  currentVelocity: 0
   playerSlimeSize: 5
   discardedSlimeSize: 2
   arrow: {fileID: 5629736610481509120}

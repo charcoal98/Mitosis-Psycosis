@@ -23,6 +23,9 @@ public class playerMovement : MonoBehaviour
     public float moveSpeed;
     public float jump;
 
+    public float maxSpeed;
+    public float currentVelocity;
+
     //Size of the player Slime and the discarded component
     public int playerSlimeSize;
     public int discardedSlimeSize;
@@ -69,7 +72,14 @@ public class playerMovement : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {   //Grounded Check Remove single use Variables later
+    {
+
+        currentVelocity = centerBoneRB.velocity.magnitude;
+        //Cap Max Velocity
+        centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, maxSpeed * -1, maxSpeed), centerBoneRB.velocity.y);
+        
+        
+        //Grounded Check Remove single use Variables later
         grounded = false;
         origin = transform.position;
         RaycastHit2D[] hits = Physics2D.CircleCastAll(origin, castRadius, circleDirection, castDistance);
