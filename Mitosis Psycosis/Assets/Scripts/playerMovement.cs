@@ -71,7 +71,7 @@ public class playerMovement : MonoBehaviour
 
         castRadius = playerSlimeSize / 15f;
 
-        castDistance = ScaleSize(playerSlimeSize) * (.8f / 7.5f);
+        castDistance = Goal.ScaleSize(playerSlimeSize) * (.8f / 7.5f);
     }
 
     // Update is called once per frame
@@ -100,7 +100,7 @@ public class playerMovement : MonoBehaviour
         
         
 
-        //grounded = Physics2D.CircleCast(transform.position, ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, ScaleSize(playerSlimeSize) * (.2f / 7.5f));
+        //grounded = Physics2D.CircleCast(transform.position, Goal.ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, Goal.ScaleSize(playerSlimeSize) * (.2f / 7.5f));
 
         //Move
         float y = Input.GetAxis("Vertical");
@@ -112,8 +112,9 @@ public class playerMovement : MonoBehaviour
         if (grounded)
         {
             splitCoolDown = false;
-            
         }
+        
+
 
         if (Input.GetKey(KeyCode.Space))
         {
@@ -183,7 +184,7 @@ public class playerMovement : MonoBehaviour
 
     void OnSplit()
     {  
-        if ((playerSlimeSize > 1) && !(splitCoolDown))
+        if ((playerSlimeSize > 1) && !splitCoolDown)
         {
             Split();
         }
@@ -222,75 +223,74 @@ public class playerMovement : MonoBehaviour
             eject = new Vector3(1, 1, 0).normalized;
         }
         SpawnSplitSlimes(eject);
-    }
-    
-    public void SpawnSplitSlimes(Vector3 eject) {
-        // Prevent the current slime from splitting anymore
-        splitCoolDown = true;
 
-        eject.Normalize();
-        //Check to see if new slime will spawn in wall
-        bool inWall = false;
-        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, ScaleSize(playerSlimeSize));
-        for (int i = 0; i < hits.Length; i++)
-        {
+        void SpawnSplitSlimes(Vector3 eject) {
+            // Prevent the current slime from splitting anymore
+            splitCoolDown = true;
 
-            RaycastHit2D hit = hits[i];
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+            //Normalize Eject for consistancy
+            eject.Normalize();
+
+            //Check to see if new slime will spawn in wall
+            bool inWall = false;
+            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, Goal.ScaleSize(playerSlimeSize));
+            for (int i = 0; i < hits.Length; i++)
             {
-                Debug.Log("Blarg");
-                inWall = true;
+
+                RaycastHit2D hit = hits[i];
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    Debug.Log("Blarg");
+                    inWall = true;
+                }
             }
-        }
 
-        //Instantiate two new slimes
-        GameObject newPlayerSlime = null;
-        GameObject newDiscardSlime = null;
+            //Instantiate two new slimes
+            GameObject newPlayerSlime = null;
+            GameObject newDiscardSlime = null;
 
-        if (inWall)
-        {
-            //if the player would be in a wall if they split they shouldn't spawn with an offset
-            newPlayerSlime = EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime);
-            //if the player splits into a wall the discarded piece flys opisite the force
-            newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
-        }
-        else
-        {
-            newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
-            //figure out what to do with the discarded slime
-            if (!grounded)
+            if (inWall)
             {
+                //if the player would be in a wall if they split they shouldn't spawn with an offset
+                newPlayerSlime = EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime);
+                //if the player splits into a wall the discarded piece flys opisite the force
                 newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
-            } else {
-                newDiscardSlime = EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime);
             }
+            else
+            {
+                newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
+                //figure out what to do with the discarded slime
+                if (!grounded)
+                {
+                    newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
+                }
+                else
+                {
+                    newDiscardSlime = EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime);
+                }
+            }
+
+            //Control the Size of the new Slimes
+            Goal.ControlSize(newPlayerSlime, playerSlimeSize);
+            Goal.ControlSize(newDiscardSlime, discardedSlimeSize);
+
+            //transfer Variables to new slimes
+            playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
+            newSlimeMovement.splitCoolDown = true;
+            newSlimeMovement.playerSlimeSize = playerSlimeSize;
+            newSlimeMovement.discardedSlimeSize = discardedSlimeSize;
+
+
+            //Discarded Slime
+            deadSlime newDeadSlime = newDiscardSlime.GetComponent<deadSlime>();
+            newDeadSlime.deadSize = discardedSlimeSize;
+            
+            //Delete existing slime
+            Destroy(transform.parent.gameObject);
         }
-        
-        
-
-        
-        
-        ControlSize(newPlayerSlime, playerSlimeSize);
-        ControlSize(newDiscardSlime, discardedSlimeSize);
-        
-        //transfer Variables
-        playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
-        newSlimeMovement.splitCoolDown = true;
-        newSlimeMovement.playerSlimeSize = playerSlimeSize;
-        newSlimeMovement.discardedSlimeSize = discardedSlimeSize;
-
-        //Delete existing slime
-        Destroy(transform.parent.gameObject);
     }
-
-    
-
-    //will need to add detection in case the spawned pieces end up in a wall
     public GameObject EjectedSlimeSpawn(Vector3 eject, GameObject obj)
     {
-        // Debug.Log(obj.tag + " Transform: " + transform.position.x + "x" + transform.position.y);
-        // Debug.Log(obj.tag + " Eject: " + eject.x + "x" + eject.y);
-
         //Create object
         Debug.DrawLine(transform.position, transform.position + eject, Color.yellow);
         ejectDebug = eject + transform.position;
@@ -301,12 +301,10 @@ public class playerMovement : MonoBehaviour
         //set object position
         
         newProjectile.transform.position = transform.position + eject;
-        //Debug.Log(obj.tag + " Object Transform: " + newProjectile.transform.position.x + "x" + newProjectile.transform.position.y);
 
         //Add Force
         Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
         newRB.velocity = centerBoneRB.velocity;
-        Debug.Log(newRB.velocity);
         newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
 
         return newProjectile;
@@ -316,38 +314,6 @@ public class playerMovement : MonoBehaviour
         //Debug.Log(obj.tag + ": " + (transform.position + eject).x + "x" + (transform.position + eject).y);
         GameObject newProjectile = Instantiate(obj);
         newProjectile.transform.position = transform.position + eject;
-    }
-
-    public void ControlSize(GameObject slime, int size)
-    {
-        SpriteRenderer _sr = slime.GetComponent<SpriteRenderer>();
-        switch (size)
-        {
-            case 5:
-                _sr.color = Color.red;
-                break;
-            case 4:
-                _sr.color = Color.yellow;
-                break;
-            case 3:
-                _sr.color = Color.green;
-                break;
-            case 2:
-                _sr.color = Color.cyan;
-                break;
-            case 1:
-                _sr.color = Color.blue;
-                break;
-            default:
-                return;
-        }
-        slime.transform.localScale = new Vector3(ScaleSize(size), ScaleSize(size), 1);
-    }
-
-    //Returns the size of the transform at current slimeSize
-    public float ScaleSize(int size)
-    {
-        return size * (float)1.5;
     }
 
     //Movement
@@ -364,21 +330,9 @@ public class playerMovement : MonoBehaviour
     //Draw Circle Cast for debuging
     void OnDrawGizmos()
     {
-        DrawCircleCast(origin, castRadius, circleDirection, castDistance);
-        DrawCircleCast(origin, castRadius, Vector2.left, castDistance);
-        DrawCircleCast(origin, castRadius, Vector2.right, castDistance);
+        Goal.DrawCircleCast(origin, castRadius, circleDirection, castDistance);
+        Goal.DrawCircleCast(origin, castRadius, Vector2.left, castDistance);
+        Goal.DrawCircleCast(origin, castRadius, Vector2.right, castDistance);
     }
-    
-    void DrawCircleCast(Vector2 start, float radius, Vector2 direction, float distance)
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(start, radius);
 
-        Gizmos.color = Color.yellow;
-        Vector2 endPosition = start + direction * distance;
-        Gizmos.DrawWireSphere(endPosition, radius);
-
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(start, endPosition);
-    }
 }

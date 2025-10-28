@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1205695805250077568}
   - component: {fileID: 5984999357920769430}
   - component: {fileID: 3582560777094222720}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: mainSlime Size 5
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -716,6 +716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grounded: 0
+  wallJump: 0
   boostForce: 87.5
   moveSpeed: 90
   jump: 90
@@ -1093,7 +1094,7 @@ GameObject:
   - component: {fileID: 9200905736763961055}
   - component: {fileID: 5141944769304066788}
   - component: {fileID: 6939217716105272955}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: AnalogDirection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
