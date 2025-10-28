@@ -16,6 +16,10 @@ public class playerMovement : MonoBehaviour
     //Tells whether player is on ground
     public bool grounded;
 
+    //Tells whether the player can wall jump
+    //a value of 0 means either wall, 1 means only off the left wall, and 2 means only off the right;
+    public int wallJump;
+
     //boost force
     public float boostForce;
 
@@ -41,8 +45,8 @@ public class playerMovement : MonoBehaviour
     //temporary variables for testing
 
     //circlecast
-    public Vector3 DebugEject;
-    public Vector3 DebugOrigin;
+    public Vector3 ejectDebug;
+    public Vector3 originDebug;
     Vector2 movement;
 
     //Circle Cast Debug
@@ -65,19 +69,19 @@ public class playerMovement : MonoBehaviour
         
         //Circle Cast components
 
-        castRadius = ScaleSize(playerSlimeSize) / 8f;
+        castRadius = playerSlimeSize / 15f;
 
-        castDistance = ScaleSize(playerSlimeSize) * (.3f / 7.5f);
+        castDistance = ScaleSize(playerSlimeSize) * (.8f / 7.5f);
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        currentVelocity = centerBoneRB.velocity.magnitude;
+        
+        currentVelocity = centerBoneRB.velocity.x;
         //Cap Max Velocity
         centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, maxSpeed * -1, maxSpeed), centerBoneRB.velocity.y);
-        
         
         //Grounded Check Remove single use Variables later
         grounded = false;
@@ -85,14 +89,16 @@ public class playerMovement : MonoBehaviour
         RaycastHit2D[] hits = Physics2D.CircleCastAll(origin, castRadius, circleDirection, castDistance);
         for (int i = 0; i < hits.Length; i++)
         {
-            
             RaycastHit2D hit = hits[i];
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
             {
                 grounded = true;
-                
+                wallJump = 0;
             }
         }
+
+        
+        
 
         //grounded = Physics2D.CircleCast(transform.position, ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, ScaleSize(playerSlimeSize) * (.2f / 7.5f));
 
@@ -102,16 +108,18 @@ public class playerMovement : MonoBehaviour
 
         Run(movement);
 
+
         if (grounded)
         {
             splitCoolDown = false;
+            
         }
 
         if (Input.GetKey(KeyCode.Space))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
-        Debug.DrawLine(DebugOrigin, DebugEject, Color.green);
+        Debug.DrawLine(originDebug, ejectDebug, Color.green);
     }
 
     //controller Events
@@ -125,6 +133,51 @@ public class playerMovement : MonoBehaviour
         if (grounded)
         {
             Jump(Vector2.up);
+        }
+        else
+        {
+            //Check for wall jump
+            switch (wallJump)
+            {
+                case 1:
+                    leftWallDetection();
+                    break;
+
+                case 2:
+                    rightWallDetection();
+                    break;
+
+                default:
+                    leftWallDetection();
+                    rightWallDetection();
+                    break;
+            }
+        }
+        void leftWallDetection()
+        {
+            RaycastHit2D[] left = Physics2D.CircleCastAll(origin, castRadius, Vector2.left, castDistance); 
+            for (int i = 0; i < left.Length; i++)
+            {
+                RaycastHit2D hit = left[i];
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
+                {
+                    Jump(new Vector2(1, 1));
+                    wallJump = 2;
+                }
+            }
+        }
+        void rightWallDetection()
+        {
+            RaycastHit2D[] right = Physics2D.CircleCastAll(origin, castRadius, Vector2.right, castDistance);
+            for (int i = 0; i < right.Length; i++)
+            {
+                RaycastHit2D hit = right[i];
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
+                {
+                    Jump(new Vector2(-1, 1));
+                    wallJump = 1;
+                }
+            }
         }
     }
 
@@ -240,8 +293,8 @@ public class playerMovement : MonoBehaviour
 
         //Create object
         Debug.DrawLine(transform.position, transform.position + eject, Color.yellow);
-        DebugEject = eject + transform.position;
-        DebugOrigin = transform.position;
+        ejectDebug = eject + transform.position;
+        originDebug = transform.position;
 
         GameObject newProjectile = Instantiate(obj);
 
@@ -252,7 +305,8 @@ public class playerMovement : MonoBehaviour
 
         //Add Force
         Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
-        newRB.velocity = Vector3.zero;
+        newRB.velocity = centerBoneRB.velocity;
+        Debug.Log(newRB.velocity);
         newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
 
         return newProjectile;
@@ -309,15 +363,22 @@ public class playerMovement : MonoBehaviour
 
     //Draw Circle Cast for debuging
     void OnDrawGizmos()
-    {        
+    {
+        DrawCircleCast(origin, castRadius, circleDirection, castDistance);
+        DrawCircleCast(origin, castRadius, Vector2.left, castDistance);
+        DrawCircleCast(origin, castRadius, Vector2.right, castDistance);
+    }
+    
+    void DrawCircleCast(Vector2 start, float radius, Vector2 direction, float distance)
+    {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(origin, castRadius);
+        Gizmos.DrawWireSphere(start, radius);
 
         Gizmos.color = Color.yellow;
-        Vector2 endPosition = origin + circleDirection * .2f;
-        Gizmos.DrawWireSphere(endPosition, castRadius);
+        Vector2 endPosition = start + direction * distance;
+        Gizmos.DrawWireSphere(endPosition, radius);
 
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(origin, endPosition);
+        Gizmos.DrawLine(start, endPosition);
     }
 }
