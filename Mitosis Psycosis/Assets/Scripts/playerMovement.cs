@@ -20,8 +20,6 @@ public class playerMovement : MonoBehaviour
     //a value of 0 means either wall, 1 means only off the left wall, and 2 means only off the right;
     public int wallJump;
 
-    //boost force
-    public float boostForce;
 
     //movement parameters
     public float moveSpeed;
@@ -250,21 +248,21 @@ public class playerMovement : MonoBehaviour
         if (inWall)
         {
             //if the player would be in a wall if they split they shouldn't spawn with an offset
-            newPlayerSlime = EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, transform.position);
+            newPlayerSlime = Goal.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, transform.position);
             //if the player splits into a wall the discarded piece flys opisite the force
-            newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
+            newDiscardSlime = Goal.EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
         }
         else
         {
-            newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime, transform.position);
+            newPlayerSlime = Goal.EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime, transform.position);
             //figure out what to do with the discarded slime
             if (!grounded)
             {
-                newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
+                newDiscardSlime = Goal.EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
             }
             else
             {
-                newDiscardSlime = EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime, transform.position);
+                newDiscardSlime = Goal.EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime, transform.position);
             }
         }
 
@@ -286,22 +284,6 @@ public class playerMovement : MonoBehaviour
         //Delete existing slime
         Destroy(transform.parent.gameObject);
         
-    }
-    public GameObject EjectedSlimeSpawn(Vector3 eject, GameObject obj, Vector3 startingPosition)
-    {
-        //Create object
-        GameObject newProjectile = Instantiate(obj);
-
-        //set object position
-        
-        newProjectile.transform.position = startingPosition + eject;
-
-        //Add Force
-        Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
-        newRB.velocity = centerBoneRB.velocity;
-        newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
-
-        return newProjectile;
     }
     public void SpawnSlime(Vector3 eject, GameObject obj)
     {

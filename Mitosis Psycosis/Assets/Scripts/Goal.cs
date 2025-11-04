@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Acts as a gamecontroller as well since there should only be one goal per level
+
+
 public class Goal : MonoBehaviour
 {
+
+    static public float boostForce = 87.5f;
+
     //Static Functions
     //Returns the size of the transform at current slimeSize
     static public float ScaleSize(int size)
@@ -57,13 +63,13 @@ public class Goal : MonoBehaviour
         GameObject newProjectile = Instantiate(obj);
 
         //set object position
-        
+
         newProjectile.transform.position = startingPosition + eject;
 
         //Add Force
         Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
         //newRB.velocity = centerBoneRB.velocity;
-        newRB.AddForce(eject, ForceMode2D.Impulse);
+        newRB.AddForce(eject * boostForce, ForceMode2D.Impulse);
 
         return newProjectile;
     }
@@ -71,13 +77,13 @@ public class Goal : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     void OnTriggerEnter2D(Collider2D other)
     {
