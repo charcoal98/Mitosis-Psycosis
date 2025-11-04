@@ -222,85 +222,79 @@ public class playerMovement : MonoBehaviour
         {
             eject = new Vector3(1, 1, 0).normalized;
         }
-        SpawnSplitSlimes(eject);
+    
+        // Prevent the current slime from splitting anymore
+        splitCoolDown = true;
 
-        void SpawnSplitSlimes(Vector3 eject) {
-            // Prevent the current slime from splitting anymore
-            splitCoolDown = true;
+        //Normalize Eject for consistancy
+        eject.Normalize(); // Might Be Redundant
 
-            //Normalize Eject for consistancy
-            eject.Normalize();
+        //Check to see if new slime will spawn in wall
+        bool inWall = false;
+        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, Goal.ScaleSize(playerSlimeSize));
+        for (int i = 0; i < hits.Length; i++)
+        {
 
-            //Check to see if new slime will spawn in wall
-            bool inWall = false;
-            RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, Goal.ScaleSize(playerSlimeSize));
-            for (int i = 0; i < hits.Length; i++)
+            RaycastHit2D hit = hits[i];
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-
-                RaycastHit2D hit = hits[i];
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
-                {
-                    Debug.Log("Blarg");
-                    inWall = true;
-                }
+                Debug.Log("Blarg");
+                inWall = true;
             }
+        }
 
-            //Instantiate two new slimes
-            GameObject newPlayerSlime = null;
-            GameObject newDiscardSlime = null;
+        //Instantiate two new slimes
+        GameObject newPlayerSlime = null;
+        GameObject newDiscardSlime = null;
 
-            if (inWall)
+        if (inWall)
+        {
+            //if the player would be in a wall if they split they shouldn't spawn with an offset
+            newPlayerSlime = EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, transform.position);
+            //if the player splits into a wall the discarded piece flys opisite the force
+            newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
+        }
+        else
+        {
+            newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime, transform.position);
+            //figure out what to do with the discarded slime
+            if (!grounded)
             {
-                //if the player would be in a wall if they split they shouldn't spawn with an offset
-                newPlayerSlime = EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime);
-                //if the player splits into a wall the discarded piece flys opisite the force
-                newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
+                newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
             }
             else
             {
-                newPlayerSlime = EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime);
-                //figure out what to do with the discarded slime
-                if (!grounded)
-                {
-                    newDiscardSlime = EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime);
-                }
-                else
-                {
-                    newDiscardSlime = EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime);
-                }
+                newDiscardSlime = EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime, transform.position);
             }
-
-            //Control the Size of the new Slimes
-            Goal.ControlSize(newPlayerSlime, playerSlimeSize);
-            Goal.ControlSize(newDiscardSlime, discardedSlimeSize);
-
-            //transfer Variables to new slimes
-            playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
-            newSlimeMovement.splitCoolDown = true;
-            newSlimeMovement.playerSlimeSize = playerSlimeSize;
-            newSlimeMovement.discardedSlimeSize = discardedSlimeSize;
-
-
-            //Discarded Slime
-            deadSlime newDeadSlime = newDiscardSlime.GetComponent<deadSlime>();
-            newDeadSlime.deadSize = discardedSlimeSize;
-            
-            //Delete existing slime
-            Destroy(transform.parent.gameObject);
         }
+
+        //Control the Size of the new Slimes
+        Goal.ControlSize(newPlayerSlime, playerSlimeSize);
+        Goal.ControlSize(newDiscardSlime, discardedSlimeSize);
+
+        //transfer Variables to new slimes
+        playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
+        newSlimeMovement.splitCoolDown = true;
+        newSlimeMovement.playerSlimeSize = playerSlimeSize;
+        newSlimeMovement.discardedSlimeSize = discardedSlimeSize;
+
+
+        //Discarded Slime
+        deadSlime newDeadSlime = newDiscardSlime.GetComponent<deadSlime>();
+        newDeadSlime.deadSize = discardedSlimeSize;
+            
+        //Delete existing slime
+        Destroy(transform.parent.gameObject);
+        
     }
-    public GameObject EjectedSlimeSpawn(Vector3 eject, GameObject obj)
+    public GameObject EjectedSlimeSpawn(Vector3 eject, GameObject obj, Vector3 startingPosition)
     {
         //Create object
-        Debug.DrawLine(transform.position, transform.position + eject, Color.yellow);
-        ejectDebug = eject + transform.position;
-        originDebug = transform.position;
-
         GameObject newProjectile = Instantiate(obj);
 
         //set object position
         
-        newProjectile.transform.position = transform.position + eject;
+        newProjectile.transform.position = startingPosition + eject;
 
         //Add Force
         Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();

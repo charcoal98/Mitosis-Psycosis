@@ -33,4 +33,8 @@ public class deadSlime : MonoBehaviour
             Debug.Log("Blarg");
         }
     }
+    void Merge(GameObject playerSlime)
+    {
+        
+    }
 }

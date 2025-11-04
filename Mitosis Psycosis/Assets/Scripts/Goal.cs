@@ -51,7 +51,22 @@ public class Goal : MonoBehaviour
         }
         slime.transform.localScale = new Vector3(Goal.ScaleSize(size), Goal.ScaleSize(size), 1);
     }
+    static public GameObject EjectedSlimeSpawn(Vector3 eject, GameObject obj, Vector3 startingPosition)
+    {
+        //Create object
+        GameObject newProjectile = Instantiate(obj);
 
+        //set object position
+        
+        newProjectile.transform.position = startingPosition + eject;
+
+        //Add Force
+        Rigidbody2D newRB = newProjectile.transform.GetChild(0).GetComponent<Rigidbody2D>();
+        //newRB.velocity = centerBoneRB.velocity;
+        newRB.AddForce(eject, ForceMode2D.Impulse);
+
+        return newProjectile;
+    }
 
     // Start is called before the first frame update
     void Start()
