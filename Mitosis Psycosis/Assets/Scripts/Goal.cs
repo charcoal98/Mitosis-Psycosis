@@ -74,6 +74,36 @@ public class Goal : MonoBehaviour
         return newProjectile;
     }
 
+    void Merge(GameObject playerSlime, int deadSize)
+    {
+        playerMovement pm = playerSlime.GetComponentInChildren<playerMovement>();
+        if (pm.playerSlimeSize >= deadSize)
+        {
+            Debug.Log(pm.playerSlimeSize + deadSize);
+
+            //Instantiate newPlayerSlime
+            GameObject newPlayerSlime = null;
+            newPlayerSlime = Goal.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, transform.position);
+
+            //Spawn New Player Slime
+            newPlayerSlime = Goal.EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime, transform.position);
+
+            int newSlimeSize = pm.playerSlimeSize + deadSize;
+            if (newSlimeSize > 5) { newSlimeSize = 5; }//set the upperbound of slime size
+
+            //Transfer variables to new slime
+            playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
+            newSlimeMovement.splitCoolDown = true; //Might Need to be removed
+            newSlimeMovement.playerSlimeSize = playerSlimeSize;
+            newSlimeMovement.discardedSlimeSize = discardedSlimeSize;
+
+
+            //Destroy old Slimes
+            Destroy(playerSlime.transform.parent.gameObject);
+            Destroy(transform.parent.gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {

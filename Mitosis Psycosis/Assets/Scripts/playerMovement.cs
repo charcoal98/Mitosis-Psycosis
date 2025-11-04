@@ -278,18 +278,12 @@ public class playerMovement : MonoBehaviour
 
 
         //Discarded Slime
-        deadSlime newDeadSlime = newDiscardSlime.GetComponent<deadSlime>();
+        deadSlime newDeadSlime = newDiscardSlime.GetComponentInChildren<deadSlime>();
         newDeadSlime.deadSize = discardedSlimeSize;
             
         //Delete existing slime
         Destroy(transform.parent.gameObject);
         
-    }
-    public void SpawnSlime(Vector3 eject, GameObject obj)
-    {
-        //Debug.Log(obj.tag + ": " + (transform.position + eject).x + "x" + (transform.position + eject).y);
-        GameObject newProjectile = Instantiate(obj);
-        newProjectile.transform.position = transform.position + eject;
     }
 
     //Movement

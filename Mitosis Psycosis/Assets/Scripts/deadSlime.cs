@@ -21,20 +21,19 @@ public class deadSlime : MonoBehaviour
 
     void OnCollisionStay2D(Collision2D other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("PlayerSlimeColider"))
-        {
-            Debug.Log("Blarg");
-        }
+        
     }
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.GetComponent<playerMovement>())
+        if (other.gameObject.GetComponentInChildren<playerMovement>())
         {
-            Debug.Log("Blarg");
+            playerMovement pm = other.gameObject.GetComponentInChildren<playerMovement>();
+            if (!pm.splitCoolDown)
+            {
+                Goal.Merge(other.gameObject);
+            }
         }
     }
-    void Merge(GameObject playerSlime)
-    {
-        
-    }
+
+    
 }

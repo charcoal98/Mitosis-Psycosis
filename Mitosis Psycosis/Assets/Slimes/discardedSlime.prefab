@@ -11,8 +11,6 @@ GameObject:
   - component: {fileID: 5615861196412045236}
   - component: {fileID: 8177969822699972799}
   - component: {fileID: 2908041159533573470}
-  - component: {fileID: 2485340699770507466}
-  - component: {fileID: 4632975999305855466}
   m_Layer: 9
   m_Name: discardedSlime
   m_TagString: Discarded
@@ -124,54 +122,6 @@ MonoBehaviour:
     m_Extent: {x: 0.15983188, y: 0.15974493, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
---- !u!114 &2485340699770507466
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 193501097160274499}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 468cb1cee0dda3cf7866d34830521830, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deadSize: 0
---- !u!58 &4632975999305855466
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 193501097160274499}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0.002172336, y: 0.00027742982}
-  serializedVersion: 2
-  m_Radius: 0.17
 --- !u!1 &2980602327571742974
 GameObject:
   m_ObjectHideFlags: 0
@@ -344,6 +294,7 @@ GameObject:
   - component: {fileID: 2789391046621651412}
   - component: {fileID: 1238148590714411254}
   - component: {fileID: 6472178901049151940}
+  - component: {fileID: 9040990040942077517}
   m_Layer: 9
   m_Name: bone_1
   m_TagString: Untagged
@@ -422,12 +373,25 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.1
+  m_Radius: 0.17
+--- !u!114 &9040990040942077517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3282770355828388500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 468cb1cee0dda3cf7866d34830521830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deadSize: 0
 --- !u!1 &4095207792050839374
 GameObject:
   m_ObjectHideFlags: 0
