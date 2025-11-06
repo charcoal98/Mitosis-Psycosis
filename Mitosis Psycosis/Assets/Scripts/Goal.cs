@@ -74,35 +74,57 @@ public class Goal : MonoBehaviour
         return newProjectile;
     }
 
-    void Merge(GameObject playerSlime, int deadSize)
+    static public void Merge(GameObject playerSlime, GameObject mergedSlime, int mergeSize, playerMovement pm)
     {
-        playerMovement pm = playerSlime.GetComponentInChildren<playerMovement>();
-        if (pm.playerSlimeSize >= deadSize)
+        if (pm.playerSlimeSize >= mergeSize)
         {
-            Debug.Log(pm.playerSlimeSize + deadSize);
+            //Debug.Log(pm.playerSlimeSize);
+            float x = ((playerSlime.transform.position.x - mergedSlime.transform.position.x) / 2) + mergedSlime.transform.position.x;
+            float y = ((playerSlime.transform.position.y - mergedSlime.transform.position.y) / 2) + mergedSlime.transform.position.y;
+            Vector3 spawnPoint = new Vector3(x, y, 0);
 
             //Instantiate newPlayerSlime
             GameObject newPlayerSlime = null;
-            newPlayerSlime = Goal.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, transform.position);
 
             //Spawn New Player Slime
-            newPlayerSlime = Goal.EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime, transform.position);
+            newPlayerSlime = Goal.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, spawnPoint);
 
-            int newSlimeSize = pm.playerSlimeSize + deadSize;
+            int newSlimeSize = pm.playerSlimeSize + mergeSize;
             if (newSlimeSize > 5) { newSlimeSize = 5; }//set the upperbound of slime size
+
+            //Control the Size of the new Slimes
+            ControlSize(newPlayerSlime, newSlimeSize);
 
             //Transfer variables to new slime
             playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
-            newSlimeMovement.splitCoolDown = true; //Might Need to be removed
-            newSlimeMovement.playerSlimeSize = playerSlimeSize;
-            newSlimeMovement.discardedSlimeSize = discardedSlimeSize;
+            newSlimeMovement.splitCoolDown = true; //prevents the player from merging imediatly after splitting
+            newSlimeMovement.playerSlimeSize = newSlimeSize;
+            newSlimeMovement.discardedSlimeSize = getDiscardedSlimeSize(newSlimeSize);
 
 
             //Destroy old Slimes
             Destroy(playerSlime.transform.parent.gameObject);
-            Destroy(transform.parent.gameObject);
+            Destroy(mergedSlime.transform.parent.gameObject);
         }
     }
+
+    static public int getDiscardedSlimeSize(int playerSlimeSize)
+    {
+        switch (playerSlimeSize)
+        {
+            case 5:
+                return 2;
+            case 4:
+                return 2;
+            case 3:
+                return 1;
+            case 2:
+                return 1;
+            default:
+                return 0;
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()

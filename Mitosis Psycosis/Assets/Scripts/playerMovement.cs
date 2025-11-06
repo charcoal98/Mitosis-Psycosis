@@ -70,6 +70,7 @@ public class playerMovement : MonoBehaviour
         castRadius = playerSlimeSize / 15f;
 
         castDistance = Goal.ScaleSize(playerSlimeSize) * (.8f / 7.5f);
+        DebugValues();
     }
 
     // Update is called once per frame
@@ -95,10 +96,6 @@ public class playerMovement : MonoBehaviour
             }
         }
 
-        
-        
-
-        //grounded = Physics2D.CircleCast(transform.position, Goal.ScaleSize(playerSlimeSize) / 7.5f, Vector2.down, Goal.ScaleSize(playerSlimeSize) * (.2f / 7.5f));
 
         //Move
         float y = Input.GetAxis("Vertical");
@@ -190,27 +187,11 @@ public class playerMovement : MonoBehaviour
 
     public void Split()
     {
-        switch (playerSlimeSize)
-        {
-            case 5:
-                playerSlimeSize = 3;
-                discardedSlimeSize = 2;
-                break;
-            case 4:
-                playerSlimeSize = 2;
-                discardedSlimeSize = 2;
-                break;
-            case 3:
-                playerSlimeSize = 2;
-                discardedSlimeSize = 1;
-                break;
-            case 2:
-                playerSlimeSize = 1;
-                discardedSlimeSize = 1;
-                break;
-            default:
-                return;
-        }
+        //calculate sizes of the new slimes
+        discardedSlimeSize = Goal.getDiscardedSlimeSize(playerSlimeSize);
+        playerSlimeSize -= discardedSlimeSize;
+
+        if (playerSlimeSize < 1) playerSlimeSize = 1;
         Vector3 eject;
         if (Mathf.Abs(anaDirection.rightStickX) > 0 || Mathf.Abs(anaDirection.rightStickY) > 0)
         {
@@ -305,4 +286,9 @@ public class playerMovement : MonoBehaviour
         Goal.DrawCircleCast(origin, castRadius, Vector2.right, castDistance);
     }
 
+    void DebugValues()
+    {
+        Debug.Log("Player Slime Size" + playerSlimeSize);
+        Debug.Log("Discarded Slime Size" + discardedSlimeSize);
+    }
 }
