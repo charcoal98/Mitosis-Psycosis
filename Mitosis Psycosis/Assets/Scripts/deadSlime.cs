@@ -30,7 +30,7 @@ public class deadSlime : MonoBehaviour
             playerMovement pm = other.gameObject.GetComponentInChildren<playerMovement>();
             if (!pm.splitCoolDown)
             {
-                Goal.Merge(other.gameObject, transform.gameObject, deadSize, pm);
+                MasterController.Merge(other.gameObject, transform.gameObject, deadSize, pm);
             }
         }
     }

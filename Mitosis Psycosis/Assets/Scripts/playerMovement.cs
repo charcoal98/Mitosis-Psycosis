@@ -69,7 +69,7 @@ public class playerMovement : MonoBehaviour
 
         castRadius = playerSlimeSize / 15f;
 
-        castDistance = Goal.ScaleSize(playerSlimeSize) * (.8f / 7.5f);
+        castDistance = MasterController.ScaleSize(playerSlimeSize) * (.8f / 7.5f);
         DebugValues();
     }
 
@@ -188,7 +188,7 @@ public class playerMovement : MonoBehaviour
     public void Split()
     {
         //calculate sizes of the new slimes
-        discardedSlimeSize = Goal.getDiscardedSlimeSize(playerSlimeSize);
+        discardedSlimeSize = MasterController.getDiscardedSlimeSize(playerSlimeSize);
         playerSlimeSize -= discardedSlimeSize;
 
         if (playerSlimeSize < 1) playerSlimeSize = 1;
@@ -210,7 +210,7 @@ public class playerMovement : MonoBehaviour
 
         //Check to see if new slime will spawn in wall
         bool inWall = false;
-        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, Goal.ScaleSize(playerSlimeSize));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, MasterController.ScaleSize(playerSlimeSize));
         for (int i = 0; i < hits.Length; i++)
         {
 
@@ -229,27 +229,27 @@ public class playerMovement : MonoBehaviour
         if (inWall)
         {
             //if the player would be in a wall if they split they shouldn't spawn with an offset
-            newPlayerSlime = Goal.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, transform.position);
+            newPlayerSlime = MasterController.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, transform.position);
             //if the player splits into a wall the discarded piece flys opisite the force
-            newDiscardSlime = Goal.EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
+            newDiscardSlime = MasterController.EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
         }
         else
         {
-            newPlayerSlime = Goal.EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime, transform.position);
+            newPlayerSlime = MasterController.EjectedSlimeSpawn(eject, PrefabManager.instance.newPlayerSlime, transform.position);
             //figure out what to do with the discarded slime
             if (!grounded)
             {
-                newDiscardSlime = Goal.EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
+                newDiscardSlime = MasterController.EjectedSlimeSpawn(eject * -1, PrefabManager.instance.discardedSlime, transform.position);
             }
             else
             {
-                newDiscardSlime = Goal.EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime, transform.position);
+                newDiscardSlime = MasterController.EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime, transform.position);
             }
         }
 
         //Control the Size of the new Slimes
-        Goal.ControlSize(newPlayerSlime, playerSlimeSize);
-        Goal.ControlSize(newDiscardSlime, discardedSlimeSize);
+        MasterController.ControlSize(newPlayerSlime, playerSlimeSize);
+        MasterController.ControlSize(newDiscardSlime, discardedSlimeSize);
 
         //transfer Variables to new slimes
         playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
@@ -281,9 +281,9 @@ public class playerMovement : MonoBehaviour
     //Draw Circle Cast for debuging
     void OnDrawGizmos()
     {
-        Goal.DrawCircleCast(origin, castRadius, circleDirection, castDistance);
-        Goal.DrawCircleCast(origin, castRadius, Vector2.left, castDistance);
-        Goal.DrawCircleCast(origin, castRadius, Vector2.right, castDistance);
+        MasterController.DrawCircleCast(origin, castRadius, circleDirection, castDistance);
+        MasterController.DrawCircleCast(origin, castRadius, Vector2.left, castDistance);
+        MasterController.DrawCircleCast(origin, castRadius, Vector2.right, castDistance);
     }
 
     void DebugValues()

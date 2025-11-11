@@ -717,7 +717,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grounded: 0
   wallJump: 0
-  boostForce: 87.5
   moveSpeed: 90
   jump: 90
   maxSpeed: 25
