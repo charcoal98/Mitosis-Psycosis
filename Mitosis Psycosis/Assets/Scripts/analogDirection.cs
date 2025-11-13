@@ -39,12 +39,23 @@ public class analogDirection : MonoBehaviour
 
         if (rightStickX == 0 && rightStickY == 0)
         {
+            Hide();
             rightStick = new Vector2(1, 1);
         }
     }
 
     void OnRightStick(InputValue value)
     {
+        Show();
         rightStick = value.Get<Vector2>().normalized;
+    }
+
+    void Show()
+    {
+        gameObject.GetComponent<Renderer>().enabled = true;
+    }
+    void Hide()
+    {
+        gameObject.GetComponent<Renderer>().enabled = false;
     }
 }

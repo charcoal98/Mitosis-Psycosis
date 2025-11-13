@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MasterController : MonoBehaviour
 {
     //Contains a bunch of static methods
     static public float boostForce = 87.5f;
+    static public bool mergeInProgress = false;
 
     //Static Functions
     //Returns the size of the transform at current slimeSize
@@ -72,37 +74,52 @@ public class MasterController : MonoBehaviour
 
     static public void Merge(GameObject playerSlime, GameObject mergedSlime, int mergeSize, playerMovement pm)
     {
+        mergeInProgress = true;
         if (pm.playerSlimeSize >= mergeSize)
         {
             //Debug.Log(pm.playerSlimeSize);
             float x = ((playerSlime.transform.position.x - mergedSlime.transform.position.x) / 2) + mergedSlime.transform.position.x;
             float y = ((playerSlime.transform.position.y - mergedSlime.transform.position.y) / 2) + mergedSlime.transform.position.y;
             Vector3 spawnPoint = new Vector3(x, y, 0);
-
             //Instantiate newPlayerSlime
             GameObject newPlayerSlime = null;
-
             //Spawn New Player Slime
             newPlayerSlime = MasterController.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, spawnPoint);
             //give new player slime velocity
             //newPlayerSlime.transform.GetChild.velocity = playerSlime.transform.velocity;
-
             int newSlimeSize = pm.playerSlimeSize + mergeSize;
-            if (newSlimeSize > 5) { newSlimeSize = 5; }//set the upperbound of slime size
+            int remainder = 0;
 
+            //set the upperbound of slime size and create a remainder slime for conservation of mass
+            if (newSlimeSize > 5) { 
+                remainder = newSlimeSize - 5;
+                newSlimeSize = 5; 
+            }
             //Control the Size of the new Slimes
             ControlSize(newPlayerSlime, newSlimeSize);
 
             //Transfer variables to new slime
             playerMovement newSlimeMovement = newPlayerSlime.GetComponentInChildren<playerMovement>();
+
             //newSlimeMovement.splitCoolDown = true; //prevents the player from merging imediatly after splitting
             newSlimeMovement.playerSlimeSize = newSlimeSize;
             newSlimeMovement.discardedSlimeSize = getDiscardedSlimeSize(newSlimeSize);
 
-
             //Destroy old Slimes
             Destroy(playerSlime.transform.parent.gameObject);
             Destroy(mergedSlime.transform.parent.gameObject);
+
+            //Spawn remainder Slime if needed
+            if (remainder != 0)
+            {
+                GameObject remainderSlime = null;
+                Vector3 remainderSpawnPoint = new Vector3(x - (ScaleSize(5)/4),y, 0);
+                remainderSlime = MasterController.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.discardedSlime, remainderSpawnPoint);
+                ControlSize(remainderSlime, remainder);
+                deadSlime remainderSlimeScript = remainderSlime.GetComponentInChildren<deadSlime>();
+                remainderSlimeScript.deadSize = remainder;
+            }
+            mergeInProgress = false;
         }
     }
 
@@ -122,6 +139,14 @@ public class MasterController : MonoBehaviour
                 return 0;
         }
     }
+
+    static public void restartScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+
+    
     // Start is called before the first frame update
     void Start()
     {

@@ -4,36 +4,17 @@ using UnityEngine;
 
 public class deadSlime : MonoBehaviour
 {
-
     public int deadSize;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    void OnCollisionStay2D(Collision2D other)
-    {
-        
-    }
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.GetComponentInChildren<playerMovement>())
+        if (other.gameObject.GetComponentInChildren<playerMovement>() && other.gameObject.GetComponentInChildren<playerMovement>().playerSlimeSize < 5)
         {
             playerMovement pm = other.gameObject.GetComponentInChildren<playerMovement>();
-            if (!pm.splitCoolDown)
+            if (!pm.splitCoolDown && !MasterController.mergeInProgress)
             {
                 MasterController.Merge(other.gameObject, transform.gameObject, deadSize, pm);
             }
         }
     }
-
     
 }

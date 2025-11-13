@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 using UnityEngine.InputSystem;
 
 public class playerMovement : MonoBehaviour
@@ -18,7 +18,8 @@ public class playerMovement : MonoBehaviour
 
     //Tells whether the player can wall jump
     //a value of 0 means either wall, 1 means only off the left wall, and 2 means only off the right;
-    public int wallJump;
+    //Scrapped
+    //public int wallJump;
 
 
     //movement parameters
@@ -76,8 +77,6 @@ public class playerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        
         currentVelocity = centerBoneRB.velocity.x;
         //Cap Max Velocity
         centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, maxSpeed * -1, maxSpeed), centerBoneRB.velocity.y);
@@ -92,7 +91,7 @@ public class playerMovement : MonoBehaviour
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
             {
                 grounded = true;
-                wallJump = 0;
+                //wallJump = 0;
             }
         }
 
@@ -109,11 +108,9 @@ public class playerMovement : MonoBehaviour
             splitCoolDown = false;
         }
         
-
-
         if (Input.GetKey(KeyCode.Space))
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            MasterController.restartScene();
         }
         Debug.DrawLine(originDebug, ejectDebug, Color.green);
     }
@@ -130,7 +127,7 @@ public class playerMovement : MonoBehaviour
         {
             Jump(Vector2.up);
         }
-        else
+        /*else //WallJump
         {
             //Check for wall jump
             switch (wallJump)
@@ -174,7 +171,7 @@ public class playerMovement : MonoBehaviour
                     wallJump = 1;
                 }
             }
-        }
+        }*/ //Scraped Code for a wall jump, made platforming too easy
     }
 
     void OnSplit()
@@ -185,6 +182,12 @@ public class playerMovement : MonoBehaviour
         }
     }
 
+    public void Die()
+    {
+        Debug.Log("You Are Dead, Not Big Suprise");
+        //play a sound or something
+        MasterController.restartScene();
+    }
     public void Split()
     {
         //calculate sizes of the new slimes
