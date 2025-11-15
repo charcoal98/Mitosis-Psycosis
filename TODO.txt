@@ -19,8 +19,12 @@ Change Sprite of arrow when no direction is held
 
 Carry over momentum on merge
 
-Make Lose Condition Done Needs Sound and Graphic
+Make Lose Condition - Needs Sound and Graphic
     
 Fix merging race condition
 
 Wall that prevents Player but not dead slimes
+
+create level select
+
+make wall jumping only available to smallest size slime

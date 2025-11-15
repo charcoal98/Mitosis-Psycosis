@@ -18,8 +18,7 @@ public class playerMovement : MonoBehaviour
 
     //Tells whether the player can wall jump
     //a value of 0 means either wall, 1 means only off the left wall, and 2 means only off the right;
-    //Scrapped
-    //public int wallJump;
+    public int wallJump;
 
 
     //movement parameters
@@ -91,7 +90,7 @@ public class playerMovement : MonoBehaviour
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
             {
                 grounded = true;
-                //wallJump = 0;
+                wallJump = 0;
             }
         }
 
@@ -127,7 +126,7 @@ public class playerMovement : MonoBehaviour
         {
             Jump(Vector2.up);
         }
-        /*else //WallJump
+        else if(playerSlimeSize == 1)//WallJump
         {
             //Check for wall jump
             switch (wallJump)
@@ -171,7 +170,7 @@ public class playerMovement : MonoBehaviour
                     wallJump = 1;
                 }
             }
-        }*/ //Scraped Code for a wall jump, made platforming too easy
+        }
     }
 
     void OnSplit()

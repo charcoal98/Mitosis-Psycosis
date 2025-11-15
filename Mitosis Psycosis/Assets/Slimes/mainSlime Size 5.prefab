@@ -719,7 +719,7 @@ MonoBehaviour:
   wallJump: 0
   moveSpeed: 90
   jump: 90
-  maxSpeed: 25
+  maxSpeed: 20
   currentVelocity: 0
   playerSlimeSize: 5
   discardedSlimeSize: 2
