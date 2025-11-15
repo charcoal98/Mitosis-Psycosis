@@ -12,10 +12,16 @@ Conservation of Mass Done
     Prevent max slimes from merging Done
 
 Make Enemies You can Merge With - Done
+create level select Done
+
+Change Sprite of arrow when no direction is held Done
+
+make wall jumping only available to smallest size slime Done
+
+Wall that prevents Player but not dead slimes Done
 
 
-Make Levels
-Change Sprite of arrow when no direction is held
+Make Levels 1/3
 
 Carry over momentum on merge
 
@@ -23,8 +29,6 @@ Make Lose Condition - Needs Sound and Graphic
     
 Fix merging race condition
 
-Wall that prevents Player but not dead slimes
 
-create level select
 
-make wall jumping only available to smallest size slime
+

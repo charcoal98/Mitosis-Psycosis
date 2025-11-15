@@ -9,6 +9,7 @@ public class MasterController : MonoBehaviour
     static public float boostForce = 87.5f;
     static public bool mergeInProgress = false;
 
+
     //Static Functions
     //Returns the size of the transform at current slimeSize
     static public float ScaleSize(int size)
@@ -150,7 +151,7 @@ public class MasterController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+       Debug.Log(SceneManager.GetActiveScene().name); 
     }
 
     // Update is called once per frame

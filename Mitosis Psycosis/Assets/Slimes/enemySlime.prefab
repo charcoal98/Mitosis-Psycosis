@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5615861196412045236}
   - component: {fileID: 8177969822699972799}
   - component: {fileID: 2908041159533573470}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: enemySlime
   m_TagString: Discarded
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 4281854094455248674}
   - component: {fileID: 1987265172926520649}
   - component: {fileID: 639639099077776870}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 1238148590714411254}
   - component: {fileID: 6472178901049151940}
   - component: {fileID: 8734197891434584118}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 3640220403702937403}
   - component: {fileID: 7365156107963197939}
   - component: {fileID: 3254926498521073302}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -567,7 +567,7 @@ GameObject:
   - component: {fileID: 6964119759366606972}
   - component: {fileID: 8097050461644746599}
   - component: {fileID: 7090452521858246016}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -728,7 +728,7 @@ GameObject:
   - component: {fileID: 7903042184252263190}
   - component: {fileID: 7082319627073839522}
   - component: {fileID: 5899151610568564276}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -889,7 +889,7 @@ GameObject:
   - component: {fileID: 225404873695314232}
   - component: {fileID: 5508577768247518713}
   - component: {fileID: 7151761514579946981}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1050,7 +1050,7 @@ GameObject:
   - component: {fileID: 9007392081400910450}
   - component: {fileID: 7604174144444561700}
   - component: {fileID: 8778012749766400924}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1211,7 +1211,7 @@ GameObject:
   - component: {fileID: 7555614781636289888}
   - component: {fileID: 2126511323864539217}
   - component: {fileID: 8814390524767182708}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1372,7 +1372,7 @@ GameObject:
   - component: {fileID: 3163777643291761578}
   - component: {fileID: 6546069236111551003}
   - component: {fileID: 3567227334922874061}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: bone_6
   m_TagString: Untagged
   m_Icon: {fileID: 0}

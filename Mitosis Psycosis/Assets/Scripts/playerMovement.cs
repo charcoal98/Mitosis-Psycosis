@@ -70,12 +70,14 @@ public class playerMovement : MonoBehaviour
         castRadius = playerSlimeSize / 15f;
 
         castDistance = MasterController.ScaleSize(playerSlimeSize) * (.8f / 7.5f);
-        DebugValues();
+        //DebugValues();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(MenuController.menuShow){ return; }
+
         currentVelocity = centerBoneRB.velocity.x;
         //Cap Max Velocity
         centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, maxSpeed * -1, maxSpeed), centerBoneRB.velocity.y);
@@ -117,11 +119,13 @@ public class playerMovement : MonoBehaviour
     //controller Events
     void OnMove(InputValue value)
     {
+        if(MenuController.menuShow){ return; }
         movement = value.Get<Vector2>();
     }
 
     void OnJump()
     {
+        if(MenuController.menuShow){ return; }
         if (grounded)
         {
             Jump(Vector2.up);
@@ -175,9 +179,18 @@ public class playerMovement : MonoBehaviour
 
     void OnSplit()
     {  
+        if(MenuController.menuShow){ return; }
         if ((playerSlimeSize > 1) && !splitCoolDown)
         {
             Split();
+        }
+    }
+
+    void OnPause(){
+        if (MenuController.menuShow){
+            MenuController.instance.Hide();
+        }else{
+            MenuController.instance.Show();
         }
     }
 
@@ -219,7 +232,6 @@ public class playerMovement : MonoBehaviour
             RaycastHit2D hit = hits[i];
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
-                Debug.Log("Blarg");
                 inWall = true;
             }
         }

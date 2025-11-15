@@ -22,6 +22,7 @@ public class analogDirection : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(MenuController.menuShow){ return; }
         //Create Vector Based on the right stick x and y
         rightStickX = rightStick.x;
         rightStickY = rightStick.y;
@@ -46,6 +47,7 @@ public class analogDirection : MonoBehaviour
 
     void OnRightStick(InputValue value)
     {
+        if(MenuController.menuShow){ return; }
         Show();
         rightStick = value.Get<Vector2>().normalized;
     }

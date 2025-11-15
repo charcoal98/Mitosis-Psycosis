@@ -23,7 +23,7 @@ public class Goal : MonoBehaviour
     {
         if (other.gameObject.GetComponent<playerMovement>())
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            MenuController.instance.Show();
         }
     }
 }
