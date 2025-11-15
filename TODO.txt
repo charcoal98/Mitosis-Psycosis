@@ -1,0 +1,26 @@
+ADD Discarded Slime Merge Mechanic -- DONE
+    get size of player slime -- Done
+    trigger merge when discarded slime collideds with playerslime -- Done
+    creates new slime that has the size of previous player slime and discarded slime -- DONE
+    delete both player -- Done
+Move Elements to Controller - done
+Half Height Blocks in pallet - Done
+Give Slime Face - Done
+
+Conservation of Mass Done
+    Make Remainder Slimes when Merging Done
+    Prevent max slimes from merging Done
+
+Make Enemies You can Merge With - Done
+
+
+Make Levels
+Change Sprite of arrow when no direction is held
+
+Carry over momentum on merge
+
+Make Lose Condition Done Needs Sound and Graphic
+    
+Fix merging race condition
+
+Wall that prevents Player but not dead slimes
