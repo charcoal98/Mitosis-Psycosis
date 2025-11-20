@@ -14,7 +14,7 @@ public class enemySlime : MonoBehaviour
     }
     void update()
     {
-        centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, 20 * -1, 20), centerBoneRB.velocity.y);
+        centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, 20 * -1, 20), Mathf.Clamp(centerBoneRB.velocity.y, 120 * -1, 120));
     }
     void OnTriggerEnter2D(Collider2D other)
     {

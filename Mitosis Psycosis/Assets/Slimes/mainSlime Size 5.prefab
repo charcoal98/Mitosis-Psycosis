@@ -720,6 +720,7 @@ MonoBehaviour:
   moveSpeed: 90
   jump: 90
   maxSpeed: 20
+  maxSpeedy: 120
   currentVelocity: 0
   playerSlimeSize: 5
   discardedSlimeSize: 2
