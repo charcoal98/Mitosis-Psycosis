@@ -11,9 +11,12 @@ public class MenuController : MonoBehaviour
 
     //Menus
     public GameObject levelMenu;
+    public GameObject deathMenu;
+    public static bool dead;
 
     void Awake() {
         instance = this;
+        dead = false;
         Hide();
     }
     
@@ -34,25 +37,19 @@ public class MenuController : MonoBehaviour
         SceneManager.LoadScene(scene);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void SwitchMenu(GameObject menu){
         levelMenu.SetActive(false);
+        deathMenu.SetActive(false);
         menu.SetActive(true);
     }
 
     public void ShowLevelMenu(){
         SwitchMenu(levelMenu);
+    }
+
+    public void ShowDeathMenu(){
+        SwitchMenu(deathMenu);
+        dead = true;
     }
 
     public void RestartScene(){

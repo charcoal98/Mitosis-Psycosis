@@ -187,10 +187,12 @@ public class playerMovement : MonoBehaviour
     }
 
     void OnPause(){
-        if (MenuController.menuShow){
-            MenuController.instance.Hide();
-        }else{
-            MenuController.instance.Show();
+        if (!MenuController.dead){
+            if (MenuController.menuShow){
+                MenuController.instance.Hide();
+            }else{
+                MenuController.instance.Show();
+            }
         }
     }
 
@@ -198,7 +200,9 @@ public class playerMovement : MonoBehaviour
     {
         Debug.Log("You Are Dead, Not Big Suprise");
         //play a sound or something
-        MasterController.restartScene();
+        MenuController.instance.Show();
+        MenuController.instance.ShowDeathMenu();
+        
     }
     public void Split()
     {
