@@ -167,6 +167,7 @@ public class playerMovement : MonoBehaviour
         }
         void rightWallDetection()
         {
+            
             RaycastHit2D[] right = Physics2D.CircleCastAll(origin, castRadius, Vector2.right, castDistance);
             for (int i = 0; i < right.Length; i++)
             {
