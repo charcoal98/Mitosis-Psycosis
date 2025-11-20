@@ -8,7 +8,7 @@ public class MasterController : MonoBehaviour
     //Contains a bunch of static methods
     static public float boostForce = 87.5f;
     static public bool mergeInProgress = false;
-
+    static public bool hasKey = false;
 
     //Static Functions
     //Returns the size of the transform at current slimeSize

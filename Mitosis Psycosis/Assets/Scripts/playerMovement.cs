@@ -71,6 +71,9 @@ public class playerMovement : MonoBehaviour
 
         castDistance = MasterController.ScaleSize(playerSlimeSize) * (.8f / 7.5f);
         //DebugValues();
+
+        discardedSlimeSize = MasterController.getDiscardedSlimeSize(playerSlimeSize);
+        MasterController.ControlSize(transform.parent.gameObject, playerSlimeSize);
     }
 
     // Update is called once per frame

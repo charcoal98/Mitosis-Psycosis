@@ -5,10 +5,16 @@ using UnityEngine;
 public class enemySlime : MonoBehaviour
 {
     public int enemySize = 3;
+    Rigidbody2D centerBoneRB;
 
     void Start()
     {
         MasterController.ControlSize(transform.parent.gameObject, enemySize);
+        centerBoneRB = GetComponent<Rigidbody2D>();
+    }
+    void update()
+    {
+        centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, 20 * -1, 20), centerBoneRB.velocity.y);
     }
     void OnTriggerEnter2D(Collider2D other)
     {
