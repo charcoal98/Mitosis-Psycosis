@@ -159,7 +159,7 @@ public class playerMovement : MonoBehaviour
             for (int i = 0; i < left.Length; i++)
             {
                 RaycastHit2D hit = left[i];
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("WallJump") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("WallJump"))
                 {
                     Jump(new Vector2(1, 1));
                     wallJump = 2;
@@ -173,7 +173,7 @@ public class playerMovement : MonoBehaviour
             for (int i = 0; i < right.Length; i++)
             {
                 RaycastHit2D hit = right[i];
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("WallJump") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("WallJump"))
                 {
                     Jump(new Vector2(-1, 1));
                     wallJump = 1;
