@@ -23,6 +23,7 @@ public class Goal : MonoBehaviour
     {
         if (other.gameObject.GetComponent<playerMovement>())
         {
+            SoundManager.instance.PlayVictory();
             MenuController.instance.Show();
         }
     }

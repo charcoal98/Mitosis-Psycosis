@@ -75,6 +75,9 @@ public class playerMovement : MonoBehaviour
 
         discardedSlimeSize = MasterController.getDiscardedSlimeSize(playerSlimeSize);
         MasterController.ControlSize(transform.parent.gameObject, playerSlimeSize);
+
+        //set audio controller for sound manager
+        //SoundManager.audioSource = GetComponentInParent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -205,12 +208,14 @@ public class playerMovement : MonoBehaviour
     {
         Debug.Log("You Are Dead, Not Big Suprise");
         //play a sound or something
+        SoundManager.instance.PlayDie();
         MenuController.instance.Show();
         MenuController.instance.ShowDeathMenu();
         
     }
     public void Split()
     {
+        SoundManager.instance.PlaySplit();
         //calculate sizes of the new slimes
         discardedSlimeSize = MasterController.getDiscardedSlimeSize(playerSlimeSize);
         playerSlimeSize -= discardedSlimeSize;
@@ -298,6 +303,7 @@ public class playerMovement : MonoBehaviour
     public void Jump(Vector2 dir)
     {
         centerBoneRB.AddForce(dir * jump, ForceMode2D.Impulse);
+        SoundManager.instance.PlayJump();
         // centerBoneRB.velocity += dir * jump;
     }
 
