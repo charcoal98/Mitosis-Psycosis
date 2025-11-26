@@ -11,7 +11,7 @@ public class deadSlime : MonoBehaviour
     }
     void update()
     {
-        centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, 20 * -1, 20), Mathf.Clamp(centerBoneRB.velocity.y, 120 * -1, 120));
+        centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, -20, 20), Mathf.Clamp(centerBoneRB.velocity.y, -110, 120));
     }
     void OnTriggerEnter2D(Collider2D other)
     {

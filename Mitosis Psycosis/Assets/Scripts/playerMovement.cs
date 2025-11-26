@@ -87,7 +87,7 @@ public class playerMovement : MonoBehaviour
 
         currentVelocity = centerBoneRB.velocity.x;
         //Cap Max Velocity
-        centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, maxSpeed * -1, maxSpeed), Mathf.Clamp(centerBoneRB.velocity.y, maxSpeedy * -1, maxSpeedy));
+        centerBoneRB.velocity = new Vector2(Mathf.Clamp(centerBoneRB.velocity.x, maxSpeed * -1, maxSpeed), Mathf.Clamp(centerBoneRB.velocity.y, (maxSpeedy-10) * -1, maxSpeedy));
         
         //Grounded Check Remove single use Variables later
         grounded = false;
