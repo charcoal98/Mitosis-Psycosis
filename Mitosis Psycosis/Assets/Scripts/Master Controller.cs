@@ -75,7 +75,6 @@ public class MasterController : MonoBehaviour
 
     static public void Merge(GameObject playerSlime, GameObject mergedSlime, int mergeSize, playerMovement pm)
     {
-        mergeInProgress = true;
         SoundManager.instance.PlayAbsorb();
         if (pm.playerSlimeSize >= mergeSize)
         {
@@ -121,7 +120,6 @@ public class MasterController : MonoBehaviour
                 deadSlime remainderSlimeScript = remainderSlime.GetComponentInChildren<deadSlime>();
                 remainderSlimeScript.deadSize = remainder;
             }
-            mergeInProgress = false;
         }
     }
 
