@@ -26,7 +26,7 @@ public class enemySlime : MonoBehaviour
             {
                 //Damage Slime
                 pm.Die();
-            }else if (!pm.splitCoolDown && !MasterController.mergeInProgress)
+            }else if (!pm.splitCoolDown)
             {
                 MasterController.Merge(other.gameObject, transform.gameObject, enemySize, pm);
             }

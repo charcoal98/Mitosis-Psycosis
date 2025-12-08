@@ -7,8 +7,8 @@ public class MasterController : MonoBehaviour
 {
     //Contains a bunch of static methods
     static public float boostForce = 87.5f;
-    static public bool mergeInProgress = false;
     static public bool hasKey = false;
+    static int lastMethodCallFrameCount;
 
     //Static Functions
     //Returns the size of the transform at current slimeSize
@@ -79,6 +79,7 @@ public class MasterController : MonoBehaviour
 
     static public void Merge(GameObject playerSlime, GameObject mergedSlime, int mergeSize, playerMovement pm)
     {
+        if(lastMethodCallFrameCount == Time.frameCount) { return; } lastMethodCallFrameCount = Time.frameCount;
         SoundManager.instance.PlayAbsorb();
         if (pm.playerSlimeSize >= mergeSize)
         {

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class MenuController : MonoBehaviour
 {
     public static MenuController instance;
     public static bool menuShow;
+
+    public GameObject level1;
+    public GameObject reset;
 
     //Menus
     public GameObject levelMenu;
@@ -44,10 +48,12 @@ public class MenuController : MonoBehaviour
     }
 
     public void ShowLevelMenu(){
+        EventSystem.current.SetSelectedGameObject(level1);
         SwitchMenu(levelMenu);
     }
 
     public void ShowDeathMenu(){
+        EventSystem.current.SetSelectedGameObject(reset);
         SwitchMenu(deathMenu);
         dead = true;
     }
