@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class enemySlime : MonoBehaviour
 {
-    public int enemySize = 3;
+    public int enemySize;
     Rigidbody2D centerBoneRB;
 
     void Start()
     {
+        Debug.Log(enemySize);
         MasterController.ControlSize(transform.parent.gameObject, enemySize);
         centerBoneRB = GetComponent<Rigidbody2D>();
     }

@@ -14,6 +14,10 @@ public class MasterController : MonoBehaviour
     //Returns the size of the transform at current slimeSize
     static public float ScaleSize(int size)
     {
+        if(size == 1)
+        {
+            return size * 2;
+        } 
         return size * (float)1.5;
     }
 
@@ -49,7 +53,7 @@ public class MasterController : MonoBehaviour
                 _sr.color = Color.cyan;
                 break;
             case 1:
-                _sr.color = Color.blue;
+                _sr.color = Color.magenta;
                 break;
             default:
                 return;
@@ -143,6 +147,11 @@ public class MasterController : MonoBehaviour
     static public void restartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    static public void blarg()
+    {
+        Debug.Log("blarg");
     }
 
 

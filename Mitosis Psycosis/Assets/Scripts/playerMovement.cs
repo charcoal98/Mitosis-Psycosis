@@ -96,7 +96,7 @@ public class playerMovement : MonoBehaviour
         for (int i = 0; i < hits.Length; i++)
         {
             RaycastHit2D hit = hits[i];
-            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") || hit.collider.gameObject.layer == LayerMask.NameToLayer("DiscardSlimeColider"))
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
             {
                 grounded = true;
                 wallJump = 0;
@@ -190,6 +190,7 @@ public class playerMovement : MonoBehaviour
         if(MenuController.menuShow){ return; }
         if ((playerSlimeSize > 1) && !splitCoolDown)
         {
+
             Split();
         }
     }
@@ -215,12 +216,7 @@ public class playerMovement : MonoBehaviour
     }
     public void Split()
     {
-        SoundManager.instance.PlaySplit();
-        //calculate sizes of the new slimes
-        discardedSlimeSize = MasterController.getDiscardedSlimeSize(playerSlimeSize);
-        playerSlimeSize -= discardedSlimeSize;
 
-        if (playerSlimeSize < 1) playerSlimeSize = 1;
         Vector3 eject;
         if (Mathf.Abs(anaDirection.rightStickX) > 0 || Mathf.Abs(anaDirection.rightStickY) > 0)
         {
@@ -239,7 +235,8 @@ public class playerMovement : MonoBehaviour
 
         //Check to see if new slime will spawn in wall
         bool inWall = false;
-        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, MasterController.ScaleSize(playerSlimeSize));
+        RaycastHit2D[] hits = Physics2D.RaycastAll(origin, eject, MasterController.ScaleSize(playerSlimeSize)/2);
+        //Debug.DrawLine(origin, eject * MasterController.ScaleSize(playerSlimeSize), Color.blue);
         for (int i = 0; i < hits.Length; i++)
         {
 
@@ -249,6 +246,28 @@ public class playerMovement : MonoBehaviour
                 inWall = true;
             }
         }
+        //if player atempts to split while sandwiched between two walls prevent them
+        if (inWall)
+        {
+            MasterController.blarg();
+            RaycastHit2D[] reversehits = Physics2D.RaycastAll(origin, eject * -1, MasterController.ScaleSize(playerSlimeSize)/2);
+            for (int i = 0; i < reversehits.Length; i++)
+            {
+                RaycastHit2D hit = reversehits[i];
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
+                {
+                    splitCoolDown = false;
+                    return;
+                }
+            }
+        }
+
+        SoundManager.instance.PlaySplit();
+        //calculate sizes of the new slimes
+        discardedSlimeSize = MasterController.getDiscardedSlimeSize(playerSlimeSize);
+        playerSlimeSize -= discardedSlimeSize;
+
+        if (playerSlimeSize < 1) playerSlimeSize = 1;
 
         //Instantiate two new slimes
         GameObject newPlayerSlime = null;
@@ -256,6 +275,7 @@ public class playerMovement : MonoBehaviour
 
         if (inWall)
         {
+            
             //if the player would be in a wall if they split they shouldn't spawn with an offset
             newPlayerSlime = MasterController.EjectedSlimeSpawn(Vector3.zero, PrefabManager.instance.newPlayerSlime, transform.position);
             //if the player splits into a wall the discarded piece flys opisite the force
@@ -274,6 +294,8 @@ public class playerMovement : MonoBehaviour
                 newDiscardSlime = MasterController.EjectedSlimeSpawn(new Vector3(0, 0, 0), PrefabManager.instance.discardedSlime, transform.position);
             }
         }
+
+        
 
         //Control the Size of the new Slimes
         MasterController.ControlSize(newPlayerSlime, playerSlimeSize);
