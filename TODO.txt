@@ -20,14 +20,15 @@ make wall jumping only available to smallest size slime Done
 
 Wall that prevents Player but not dead slimes Done
 
+Make Lose Condition - Needs Sound and Graphic Done
 
-Make Levels 1/3
+Fix merging race condition Done
+
+
+Make Levels 2/3
 
 Carry over momentum on merge
-
-Make Lose Condition - Needs Sound and Graphic
-    
-Fix merging race condition
+  
 
 
 
